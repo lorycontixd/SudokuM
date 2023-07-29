@@ -29,10 +29,18 @@ MonoBehaviour:
     referenceMode: 2
     serializationDepthLimit: 64
     assemblyNames:
-    - BakeryRuntimeAssembly
     - Assembly-CSharp-firstpass
     - Assembly-CSharp
-    - BakeryEditorAssembly
+    - PhotonChat
+    - PhotonUnityNetworking.Editor
+    - PhotonUnityNetworking
+    - PhotonUnityNetworking.Demos
+    - PhotonRealtime
+    - PhotonUnityNetworking.Utilities.PhotonPlayer.Editor
+    - PhotonUnityNetworking.Utilities
+    - PunDemos.DemoHubEditor
+    - PunDemos.DemoSlotcarEditor
+    - PhotonUnityNetworking.Utilities.Culling.Editor
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1
