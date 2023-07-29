@@ -1,0 +1,5 @@
+C:/Users/Lorenzo/Documents/UnityProjects/MultiplayerSudokuMobile/.utmp/Debug/735os4ao/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Lorenzo/Documents/UnityProjects/MultiplayerSudokuMobile/.utmp/Debug/735os4ao/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/Lorenzo/Documents/UnityProjects/MultiplayerSudokuMobile/.utmp/Debug/735os4ao/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/Users/Lorenzo/Documents/UnityProjects/MultiplayerSudokuMobile/.utmp/Debug/735os4ao/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+C:/Users/Lorenzo/Documents/UnityProjects/MultiplayerSudokuMobile/.utmp/Debug/735os4ao/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
