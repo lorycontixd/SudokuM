@@ -33,7 +33,9 @@ MonoBehaviour:
     - Assembly-CSharp
     - PhotonChat
     - PhotonUnityNetworking.Editor
+    - Google.Play.Games
     - PhotonUnityNetworking
+    - Google.Play.Games.Editor
     - PhotonUnityNetworking.Demos
     - PhotonRealtime
     - PhotonUnityNetworking.Utilities.PhotonPlayer.Editor
