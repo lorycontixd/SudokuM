@@ -33,6 +33,7 @@ public class SudokuCanvas : MonoBehaviour
     public static int MaxErrors = 3;
     //public int activeNumber = -1;
     public SudokuCanvasCell currentSelectedCell = null;
+    public int MyCompletedCells { get => cells.Where(c => c.Value >= 1 && c.Value <= 9).Count(); }  
 
     [SerializeField] private GameObject gridParent = null;
     public int currentDigit;
@@ -53,6 +54,10 @@ public class SudokuCanvas : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI boardLoadingText;
 
+    [Header("Settings")]
+    [SerializeField] private bool DebugGame;
+    [SerializeField] private bool DebugText;
+
 
     private int[,] currentPuzzle;
     private SudokuSolver currentSolver = null;
@@ -63,6 +68,7 @@ public class SudokuCanvas : MonoBehaviour
     private int currentErrors = 0;
     private DateTime puzzleStartTime = DateTime.MinValue;
     private GameObject currentPanel = null;
+    private SudokuCanvasCell lastEditedCell = null;
 
 
     private void Start()
@@ -179,6 +185,11 @@ public class SudokuCanvas : MonoBehaviour
         IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
+        if (PhotonNetwork.IsMasterClient && DebugGame)
+        {
+            StartCoroutine(AutoFillGradualCo(2, 3f));
+        }
+        
     }
 
     public void ResetBoard()
@@ -208,14 +219,40 @@ public class SudokuCanvas : MonoBehaviour
         IsEmpty = true;
         IsPlaying = false;
 
-        DeselectAllValueButtons();
+        ResetValueButtons();
         historyPanel.ClearHistoryList();
+    }
+
+    private void AutoFill(int except = 1)
+    {
+        List<SudokuCanvasCell> empties = cells.Where(cell => !cell.IsLocked).ToList();
+        List<SudokuCanvasCell> toFill = empties.OrderBy(a => new System.Random().Next()).ToList().Take(empties.Count - except).ToList();
+        foreach(SudokuCanvasCell cell in toFill)
+        {
+            int val = currentSolvedBoard[cell.Row, cell.Col];
+            cell.SetNewValue(PhotonNetwork.LocalPlayer.ActorNumber, val, true);
+        }
+    }
+    private void AutoFillGradual(int except = 1)
+    {
+        List<SudokuCanvasCell> empties = cells.Where(cell => !cell.IsLocked).ToList();
+        List<SudokuCanvasCell> toFill = empties.OrderBy(a => new System.Random().Next()).ToList().Take(empties.Count - except).ToList();
+        foreach (SudokuCanvasCell cell in toFill)
+        {
+            int val = currentSolvedBoard[cell.Row, cell.Col];
+            GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, cell.Row, cell.Col, val, true, false, MyCompletedCells, Photon.Realtime.ReceiverGroup.All);
+        }
+    }
+    private IEnumerator AutoFillGradualCo(int except = 1, float delay = 2f)
+    {
+        yield return new WaitForSeconds(delay);
+        AutoFillGradual(except);
     }
 
     #region Buttons
     public void ButtonDelete()
     {
-        GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, -1, false, true);
+        GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, -1, false, true, MyCompletedCells);
     }
     public void ButtonHistory()
     {
@@ -253,15 +290,6 @@ public class SudokuCanvas : MonoBehaviour
     {
         currentSelectedCell = cell;
         OnCellSelectUIUpdate(cell);
-
-        /*
-        if (!cell.IsLocked)
-        {
-            bool isCorrect = activeNumber == currentSolvedBoard[cell.Row, cell.Col];
-            bool isDeleteMove = activeNumber == -1;
-            Debug.Log($"[OnCellSelect] Sending move ==> Row: {cell.Row}, col: {cell.Col}, digit: {activeNumber}, iscorrect: {isCorrect}");
-            GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, cell.Row, cell.Col, activeNumber, isCorrect, isDeleteMove);
-        }*/
     }
 
     /// <summary>
@@ -293,23 +321,16 @@ public class SudokuCanvas : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="row"></param>
-    /// <param name="col"></param>
-    /// <param name="digit"></param>
-    /// <param name="isCorrect"></param>
-    /// <param name="isDeleteMove"></param>
-    public void UpdateCell(int row, int col, int digit, bool isCorrect, bool isDeleteMove)
+
+
+    #region Moves
+    private void ApplyMove(SudokuCanvasCell cell, int digit, bool isCorrect, bool isDeleteMove)
     {
-        /*SudokuCanvasCell cell = cells.FirstOrDefault(c => c.Row == row && c.Col == col);
-        if (isCorrect || isDeleteMove)
+        if (isCorrect)
         {
-            // valid
             cell.SetNewValue(digit, true);
             bool isComplete = IsPuzzleComplete();
-            if (IsSolvedPuzzleCorrect())
+            if (IsPuzzleCompleteAndCorrect())
             {
                 FinishAndClose(true);
             }
@@ -323,15 +344,127 @@ public class SudokuCanvas : MonoBehaviour
                 UpdateErrorsText();
                 if (currentErrors == MaxErrors)
                 {
-                    FinishAndClose(false);
+                    Finish(false);
                 }
             }
         }
-        if (activeNumber != -1)
+    }
+    private void DeleteMove(SudokuCanvasCell cell)
+    {
+        if (!cell.IsLocked)
         {
-            HighlightValueCells(activeNumber);
+            cell.DeleteValue();
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userid"></param>
+    /// <param name="username"></param>
+    /// <param name="cell"></param>
+    /// <param name="digit"></param>
+    /// <param name="isCorrect"></param>
+    /// <param name="isDeleteMove"></param>
+    private void ApplyMoveMultiplayer(int userid, string username, SudokuCanvasCell cell, int digit, bool isCorrect, bool isDeleteMove)
+    {
+
+        if (isCorrect)
+        {
+            // valid move
+            cell.SetNewValue(userid, digit, true);
+            CheckValueButtonsToDisable();
+            if (GameManager.Instance.GameMode == GameMode.COOP)
+            {
+                bool isComplete = IsPuzzleComplete();
+                if (IsPuzzleCompleteAndCorrect())
+                {
+                    FinishAndClose(true);
+                }
+            }else if (GameManager.Instance.GameMode == GameMode.TIMERACE)
+            {
+                if (userid == PhotonNetwork.LocalPlayer.ActorNumber)
+                {
+                    bool isComplete = IsPuzzleComplete();
+                    if (IsPuzzleCompleteAndCorrect())
+                    {
+                        GamePunEventSender.SendFinish(userid, userid);
+                    }
+                }
+            }
+            
+        }
+        else
+        {
+            cell.SetNewValue(userid, digit, false);
+            if (digit != -1)
+            {
+                currentErrors++;
+                UpdateErrorsText();
+                if (currentErrors == MaxErrors)
+                {
+                    Finish(false);
+                }
+            }
+        }
+        currentPuzzle[cell.Row, cell.Col] = digit;
+        if (GameManager.Instance.GameMode == GameMode.COOP)
+        {
+            SetLastEditCell(cell.Row, cell.Col);
+        }
+        /*if (!isDeleteMove)
+        {
+            HighlightValueCells(digit);
         }*/
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cell"></param>
+    private void DeleteMoveMultiplayer(SudokuCanvasCell cell)
+    {
+        if (!cell.IsLocked)
+        {
+            cell.DeleteValue();
+            cell.SetLastEdit(false);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userid"></param>
+    /// <param name="username"></param>
+    /// <param name="cell"></param>
+    /// <param name="digit"></param>
+    /// <param name="isCorrect"></param>
+    /// <param name="isDeleteMove"></param>
+    public void SendMoveStat(int userid, string username, SudokuCanvasCell cell, int digit, bool isCorrect, bool isDeleteMove, int completedCells)
+    {
+        Move move = new Move(userid, username, cell.Row, cell.Col, digit, isCorrect);
+        if (HistoryManager.Instance != null)
+        {
+            HistoryManager.Instance.AddMove(move);
+        }
+        if (StatsManagerCoop.Instance != null)
+        {
+            if (!isDeleteMove)
+            {
+                StatsManagerCoop.Instance.AddMove(move);
+                int filledCells = cells.Where(c => c.Value != 0).ToList().Count;
+                Debug.Log($"[SendMoveStat] PLAYER {userid} filled cells: {filledCells}/{StatsManagerCoop.TOTAL_CELLS}");
+                StatsManagerCoop.Instance.SetFilledTiles(userid, completedCells);
+            }
+        }
+    }
+    #endregion
+
+
 
     /// <summary>
     /// 
@@ -343,69 +476,30 @@ public class SudokuCanvas : MonoBehaviour
     /// <param name="digit"></param>
     /// <param name="isCorrect"></param>
     /// <param name="isDeleteMove"></param>
-    public void UpdateCellMultiplayer(int userid, string username, int row, int col, int digit, bool isCorrect, bool isDeleteMove)
+    public void UpdateCellMultiplayer(int userid, string username, int row, int col, int digit, bool isCorrect, bool isDeleteMove, int completedCells)
     {
         SudokuCanvasCell cell = cells.FirstOrDefault(c => c.Row == row && c.Col == col);
         if (!isDeleteMove)
         {
-            if (isCorrect)
+            switch (GameManager.Instance.GameMode)
             {
-                // valid move
-                cell.SetNewValue(userid, digit, true);
-                CheckValueButtonsToDisable();
-                bool isComplete = IsPuzzleComplete();
-                if (IsPuzzleCompleteAndCorrect())
-                {
-                    FinishAndClose(true);
-                }
-            }
-            else
-            {
-                cell.SetNewValue(userid, digit, false);
-                if (digit != -1)
-                {
-                    currentErrors++;
-                    UpdateErrorsText();
-                    if (currentErrors == MaxErrors)
+                case GameMode.COOP:
+                    ApplyMoveMultiplayer(userid, username, cell, digit, isCorrect, isDeleteMove);
+                    SendMoveStat(userid, username, cell, digit, isCorrect, isDeleteMove, completedCells);
+                    break;
+                case GameMode.TIMERACE:
+                    if (userid == PhotonNetwork.LocalPlayer.ActorNumber)
                     {
-                        Finish(false);  
+                        ApplyMoveMultiplayer(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.LocalPlayer.NickName, cell, digit, isCorrect, isDeleteMove);
                     }
-                }
-            } 
-            
-            SetLastEditCell(row, col);
-            currentPuzzle[row, col] = digit;
-            if (!isDeleteMove)
-            {
-                HighlightValueCells(digit);
-            }
-            Move move = new Move(userid, username, row, col, digit, isCorrect);
-            if (HistoryManager.Instance != null)
-            {
-                HistoryManager.Instance.AddMove(move);
-            }
-            if (StatsManager.Instance != null)
-            {
-                if (!isDeleteMove)
-                {
-                    StatsManager.Instance.AddMove(move);
-                } 
+                    SendMoveStat(userid, username, cell, digit, isCorrect, isDeleteMove, completedCells);
+                    break;
             }
         }
         else
         {
-            if (!cell.IsLocked)
-            {
-                cell.DeleteValue();
-                cell.SetLastEdit(false);
-            }
-            else
-            {
-                return;
-            }
+            DeleteMoveMultiplayer(cell);
         }
-        
-        
     }
 
     /// <summary>
@@ -422,33 +516,23 @@ public class SudokuCanvas : MonoBehaviour
                 return;
             }
             bool isCorrect = (number.Value == currentSolvedBoard[currentSelectedCell.Row, currentSelectedCell.Col]);
-            GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false);
-        }
 
-
-        /*if (activeNumber != -1)
-        {
-            if (activeNumber == number.Value)
+            switch (GameManager.Instance.GameMode)
             {
-                activeNumber = -1;
-                number.SetSelectedAndUpdateMask(false);
-                UnhighlightAllCells();
+                case GameMode.TIMERACE:
+                    //Debug.Log($"Updating move on mode TimeRace!");
+                    //UpdateCellMultiplayer(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells);
+                    //Debug.Log($"Sending move on mode TimeRace!");
+                    GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells+1, Photon.Realtime.ReceiverGroup.All);
+                    break;
+                case GameMode.COOP:
+                    GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells+1, Photon.Realtime.ReceiverGroup.All);
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                SudokuNumberButton current = valueButtons.FirstOrDefault(b => b.Value == activeNumber);
-                current.SetSelectedAndUpdateMask(false);
-                activeNumber = number.Value;
-                number.SetSelectedAndUpdateMask(true);
-                HighlightValueCells(activeNumber);
-            }
+            
         }
-        else
-        {
-            activeNumber = number.Value;
-            number.SetSelectedAndUpdateMask(true);
-            UnhighlightAllCells();
-        }*/
     }
 
     public void Finish(bool isWin)
@@ -501,11 +585,12 @@ public class SudokuCanvas : MonoBehaviour
         return SudokuStore.boardsAreEqual(currentPuzzle, currentSolvedBoard);
     }
 
-    private void DeselectAllValueButtons()
+
+    private void ResetValueButtons()
     {
-        foreach(var vb in valueButtons)
+        foreach(SudokuNumberButton vb in valueButtons)
         {
-            vb.SetSelectedAndUpdateMask(false);
+            vb.Reset();
         }
     }
 
@@ -547,10 +632,13 @@ public class SudokuCanvas : MonoBehaviour
         
     public void SetLastEditCell(int row, int col)
     {
-        for (int i=0; i<cells.Count; i++)
+        if (lastEditedCell != null)
         {
-            cells[i].SetLastEdit(cells[i].Row == row && cells[i].Col == col);
+            lastEditedCell.SetLastEdit(false);
         }
+        SudokuCanvasCell cell = cells.FirstOrDefault(c => c.Row == row && c.Col == col);
+        cell.SetLastEdit(true);
+        lastEditedCell = cell;
     }
     public void NoLastEditCell()
     {

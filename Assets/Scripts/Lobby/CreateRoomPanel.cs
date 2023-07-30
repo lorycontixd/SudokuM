@@ -47,6 +47,11 @@ public class CreateRoomPanel : MonoBehaviour
     }
     public void CreateRoomButton()
     {
+        if (gamemodeDropdown.selectedItemIndex == (int)GameMode.SINGLEPLAYER)
+        {
+            Managers.NotificationManager.Instance.Warning("Game Mode unavailable", "This game mode is currently not available");
+            return;
+        }
         if (ValidateInput() && PhotonNetwork.IsConnectedAndReady)
         {
             CreateRoom();

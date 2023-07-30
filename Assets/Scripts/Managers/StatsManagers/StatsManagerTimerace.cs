@@ -1,17 +1,14 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class StatsManager : MonoBehaviour
+public class StatsManagerTimerace : MonoBehaviour
 {
     #region Singleton
-    private static StatsManager _instance;
-    public static StatsManager Instance { get { return _instance; } }
+    private static StatsManagerTimerace _instance;
+    public static StatsManagerTimerace Instance { get { return _instance; } }
 
     private void Awake()
     {
@@ -29,26 +26,17 @@ public class StatsManager : MonoBehaviour
     public Dictionary<int, int> correctMoves = new Dictionary<int, int>();
     public Dictionary<int, int> wrongMoves = new Dictionary<int, int>();
     public Dictionary<int, int> totalMoves = new Dictionary<int, int>();
-
     public Dictionary<int, float> averageTimePerMove = new Dictionary<int, float>();
-    public int overallTotalMoves = 0;
-    public bool IsSetup { get { return _isSetup; } }
 
     private Dictionary<int, List<float>> playerMoveTimes = new Dictionary<int, List<float>>();
     private float localPlayerTimestamp = 0;
     private float otherPlayerTimestamp = 0;
     private bool _isSetup = false;
 
-
     private void Start()
     {
         ResetStats();
         _isSetup = true;
-    }
-    private void Update()
-    {
-        localPlayerTimestamp += Time.deltaTime ;
-        otherPlayerTimestamp += Time.deltaTime;
     }
 
     public void ResetStats()
@@ -58,9 +46,8 @@ public class StatsManager : MonoBehaviour
         averageTimePerMove = new Dictionary<int, float>();
         playerMoveTimes = new Dictionary<int, List<float>>();
         totalMoves = new Dictionary<int, int>();
-        overallTotalMoves = 0;
 
-        foreach(KeyValuePair<int, Player> kvp in PhotonNetwork.CurrentRoom.Players)
+        foreach (KeyValuePair<int, Player> kvp in PhotonNetwork.CurrentRoom.Players)
         {
             int actorNumber = kvp.Value.ActorNumber;
             correctMoves.Add(actorNumber, 0);
@@ -84,20 +71,5 @@ public class StatsManager : MonoBehaviour
         {
             wrongMoves[userid]++;
         }
-        totalMoves[userid]++;
-        overallTotalMoves++;
-
-        // avg. move time
-        if (isMe)
-        {
-            playerMoveTimes[userid].Add(localPlayerTimestamp);
-            localPlayerTimestamp = 0;
-        }
-        else
-        {
-            playerMoveTimes[userid].Add(otherPlayerTimestamp);
-            otherPlayerTimestamp = 0;
-        }
-        averageTimePerMove[userid] = playerMoveTimes[userid].Average();
     }
 }

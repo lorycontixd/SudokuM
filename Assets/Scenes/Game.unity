@@ -2308,7 +2308,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1667993733}
@@ -2867,7 +2866,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 418330967}
@@ -3397,7 +3395,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1138011827}
@@ -4068,7 +4065,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1688577203}
@@ -4698,7 +4694,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1427840832}
@@ -4981,7 +4976,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 200660524}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c10e948d752f8845b563a07139df963, type: 3}
+  m_Script: {fileID: 11500000, guid: d9100c3f7acedf543ad124c43b9c6eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   overallTotalMoves: 0
@@ -5132,7 +5127,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1065094670}
@@ -5820,7 +5814,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 547150001}
@@ -7083,7 +7076,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 18709968}
@@ -7797,7 +7789,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 709854876}
@@ -8515,7 +8506,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1781168882}
@@ -9051,7 +9041,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 357669988}
@@ -11372,7 +11361,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1436580835}
@@ -11688,7 +11676,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 132838342}
@@ -12045,7 +12032,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 50195421}
@@ -12228,7 +12214,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 171853233}
@@ -12450,7 +12435,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1034946227}
@@ -13885,7 +13869,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1190370781}
@@ -15275,7 +15258,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 24619281}
@@ -15830,7 +15812,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 859805548}
@@ -15976,7 +15957,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 445202409}
@@ -16159,7 +16139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 121135408}
@@ -17018,7 +16997,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 51147215}
@@ -17299,7 +17277,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 159893418}
@@ -17445,7 +17422,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 445842434}
@@ -17667,7 +17643,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1403263590}
@@ -17813,7 +17788,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 595663656}
@@ -18033,7 +18007,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1278429255}
@@ -18255,7 +18228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1200866023}
@@ -18954,7 +18926,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1635821741}
@@ -19302,7 +19273,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1492435555}
@@ -19524,7 +19494,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 387616009}
@@ -20964,7 +20933,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1201103909}
@@ -21353,7 +21321,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1797981916}
@@ -21649,7 +21616,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 816495129}
@@ -21887,7 +21853,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2036047570}
@@ -22033,7 +21998,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2104199723}
@@ -22540,7 +22504,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1618596374}
@@ -22786,7 +22749,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 715335902}
@@ -23873,7 +23835,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1325119627}
@@ -24200,7 +24161,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2645669}
@@ -24635,7 +24595,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 224481899}
@@ -25298,7 +25257,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1540774964}
@@ -25444,7 +25402,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1897236254}
@@ -27207,7 +27164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 605321775}
@@ -27766,7 +27722,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1503754221}
@@ -28644,7 +28599,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 389356129}
@@ -29032,7 +28986,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1406445140}
@@ -29178,7 +29131,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1634905526}
@@ -29324,7 +29276,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2015415438}
@@ -29939,7 +29890,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1852373028}
@@ -30430,7 +30380,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1378020293}
@@ -30825,7 +30774,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 790183169}
@@ -32161,7 +32109,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2047868317}
@@ -32442,7 +32389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1179129270}
@@ -33805,6 +33751,8 @@ MonoBehaviour:
   ratingText: {fileID: 1850421510}
   timeText: {fileID: 1151595312}
   boardLoadingText: {fileID: 1086109881}
+  DebugGame: 0
+  DebugText: 0
 --- !u!1 &1425604392
 GameObject:
   m_ObjectHideFlags: 0
@@ -34664,7 +34612,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 326110883}
@@ -35080,7 +35027,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1237372321}
@@ -35302,7 +35248,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 107493293}
@@ -36931,7 +36876,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 908769092}
@@ -37229,7 +37173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1021354758}
@@ -37451,7 +37394,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 782566409}
@@ -38058,7 +38000,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 42785918}
@@ -38346,7 +38287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 634054471}
@@ -40591,7 +40531,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 836827592}
@@ -41017,7 +40956,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 881079538}
@@ -41163,7 +41101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1479264024}
@@ -41769,7 +41706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1760330565
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41841,7 +41778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 892df037e7545ef47beae51170b8548e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStatsPanelPrefab: {fileID: 3429516603807426848, guid: 8a8c1c927796d034fa158c82dd604e20, type: 3}
+  playerStatsPanelPrefab: {fileID: 3509023132715882575, guid: 8a8c1c927796d034fa158c82dd604e20, type: 3}
   statsPanelMenu: {fileID: 127805783}
 --- !u!1 &1768351670
 GameObject:
@@ -42648,7 +42585,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1825495623}
@@ -43552,7 +43488,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1780337827}
@@ -44049,7 +43984,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1137836606}
@@ -45170,7 +45104,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1398157863}
@@ -45353,7 +45286,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1214720855}
@@ -45499,7 +45431,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 156637149}
@@ -45645,7 +45576,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 233103737}
@@ -45904,7 +45834,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1473798749}
@@ -46724,7 +46653,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1533683293}
@@ -47005,7 +46933,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1159138168}
@@ -47151,7 +47078,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 908817628}
@@ -47297,7 +47223,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 247148096}
@@ -47733,7 +47658,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1264878207}
@@ -47879,7 +47803,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 805671399}
@@ -48025,7 +47948,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2116717086}
@@ -48306,7 +48228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Value: 0
-  IsLocked: 0
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1367436621}

@@ -9,7 +9,6 @@ public class SudokuNumberButton : MonoBehaviour
 {
     public int ID;
     public int Value;
-    public bool IsSelected { get; private set; } = false;
     private Button button;
     [SerializeField] private TextMeshProUGUI valueText;
     [SerializeField] private Image selectionMask;
@@ -25,7 +24,7 @@ public class SudokuNumberButton : MonoBehaviour
         {
             selectionMask = transform.Find("Mask").GetComponent<Image>();
         }
-        SetSelectedAndUpdateMask(false);
+        Reset();
     }
 
     public void SetID(int id)
@@ -38,18 +37,6 @@ public class SudokuNumberButton : MonoBehaviour
         onButtonClick?.Invoke(this);
     }
 
-    public void SetSelected(bool isSelected)
-    {
-        this.IsSelected = isSelected;
-    }
-
-    public void SetSelectedAndUpdateMask(bool isSelected)
-    {
-        SetSelected(isSelected);
-        selectionMask.gameObject.SetActive(isSelected);
-    }
-
-
     public void Deactivate()
     {
         valueText.gameObject.SetActive(false);
@@ -59,5 +46,11 @@ public class SudokuNumberButton : MonoBehaviour
     {
         valueText.gameObject.SetActive(true);
         selectionMask.gameObject.SetActive(true);
+    }
+
+    public void Reset()
+    {
+        valueText.gameObject.SetActive(true);
+        selectionMask.gameObject.SetActive(false);
     }
 }

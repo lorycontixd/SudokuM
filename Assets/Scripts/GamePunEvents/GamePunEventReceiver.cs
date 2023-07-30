@@ -29,7 +29,8 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             int rating = (int)data[3];
             Debug.Log($"[EventReceiver] Received Board ==> N: {N}, Rating: {rating} ==> Initializing...");
             SudokuCanvas.Instance.InitializeBoard(board, solution, rating);
-        }else if (eventCode == GamePunEventSender.SendMoveEventCode)
+        }
+        else if (eventCode == GamePunEventSender.SendMoveEventCode)
         {
 
             object[] data = (object[])photonEvent.CustomData;
@@ -40,8 +41,15 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             int digit = (int)data[4];
             bool isCorrect = (bool)data[5];
             bool isDeleteMove = (bool)data[6];
-            Debug.Log($"[EventReceiver] Recived move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}");
-            SudokuCanvas.Instance.UpdateCellMultiplayer(userid, username, row, col, digit, isCorrect, isDeleteMove);
+            int completedCells = (int)data[7];
+            Debug.Log($"[EventReceiver] Recived move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}, {completedCells}");
+            SudokuCanvas.Instance.UpdateCellMultiplayer(userid, username, row, col, digit, isCorrect, isDeleteMove, completedCells);
+        }else if (eventCode == GamePunEventSender.SendFinishEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int userid = (int)data[0];
+            int winnerid = (int)data[1];
+            SudokuCanvas.Instance.FinishAndClose(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 }

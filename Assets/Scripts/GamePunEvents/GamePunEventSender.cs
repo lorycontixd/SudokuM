@@ -13,7 +13,7 @@ public class GamePunEventSender
     public const byte SendBoardEventCode = 1;
     public const byte SendMoveEventCode = 2;
     public const byte SendDigitSelectEventCode = 3;
-
+    public const byte SendFinishEventCode = 4;
 
     public static void SendBoard(int[,] board, int[,] solution, int rating)
     {
@@ -34,11 +34,11 @@ public class GamePunEventSender
         PhotonNetwork.RaiseEvent(SendBoardEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void SendMove(int userid, string username, int row, int col, int digit, bool isCorrect, bool isDeleteMove)
+    public static void SendMove(int userid, string username, int row, int col, int digit, bool isCorrect, bool isDeleteMove, int completedCells, ReceiverGroup receivers = ReceiverGroup.All)
     {
-        Debug.Log($"[EventSender] Sending move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}");
-        object[] content = new object[] {userid, username, row, col, digit, isCorrect, isDeleteMove }; 
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        Debug.Log($"[EventSender] Sending move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}, {completedCells}");
+        object[] content = new object[] {userid, username, row, col, digit, isCorrect, isDeleteMove, completedCells }; 
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = receivers };
         PhotonNetwork.RaiseEvent(SendMoveEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
@@ -54,5 +54,12 @@ public class GamePunEventSender
         object[] content = new object[] { userid, username, row, col };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent(SendDigitSelectEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public static void SendFinish(int userid, int winnerid)
+    {
+        object[] content = new object[] { userid, winnerid };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(SendFinishEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 }

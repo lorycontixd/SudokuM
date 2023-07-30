@@ -65,9 +65,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             HistoryManager.Instance.Clear();
         }
-        if (StatsManager.Instance != null)
+        if (StatsManagerCoop.Instance != null)
         {
-            StatsManager.Instance.ResetStats();
+            StatsManagerCoop.Instance.ResetStats();
         }
         GamePunEventSender.SendBoard(currentPuzzle, currentSolution, currentRating);
     }
@@ -79,9 +79,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             HistoryManager.Instance.Clear();
         }
-        if (StatsManager.Instance != null)
+        if (StatsManagerCoop.Instance != null)
         {
-            StatsManager.Instance.ResetStats();
+            StatsManagerCoop.Instance.ResetStats();
         }
     }
 

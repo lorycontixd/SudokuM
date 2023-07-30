@@ -19,7 +19,7 @@ public class StatsPanel : MonoBehaviour
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => HistoryManager.Instance.IsSetup);
-        yield return new WaitUntil(() => StatsManager.Instance.IsSetup);
+        yield return new WaitUntil(() => StatsManagerCoop.Instance.IsSetup);
         if (HistoryManager.Instance != null)
         {
             HistoryManager.Instance.onMoveReceived += OnMoveReceived;
