@@ -23,10 +23,10 @@ MonoBehaviour:
   buttonDisabledAlpha: 0.4
   dropdownFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   dropdownItemFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
-  dropdownBackgroundColor: {r: 255, g: 255, b: 255, a: 255}
-  dropdownContentBackgroundColor: {r: 255, g: 255, b: 255, a: 255}
-  dropdownPrimaryColor: {r: 255, g: 255, b: 255, a: 255}
-  dropdownItemBackgroundColor: {r: 255, g: 255, b: 255, a: 255}
+  dropdownBackgroundColor: {r: 0.18039216, g: 0.2509804, b: 0.33333334, a: 1}
+  dropdownContentBackgroundColor: {r: 0.3045924, g: 0.47776788, b: 0.6509434, a: 1}
+  dropdownPrimaryColor: {r: 1, g: 1, b: 1, a: 1}
+  dropdownItemBackgroundColor: {r: 0.30588236, g: 0.4784314, b: 0.6509804, a: 1}
   dropdownItemPrimaryColor: {r: 255, g: 255, b: 255, a: 255}
   selectorFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   selectorColor: {r: 1, g: 1, b: 1, a: 1}

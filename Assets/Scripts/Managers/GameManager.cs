@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
+    public GameMode GameMode { get; private set; }
+
     [SerializeField] private SudokuCanvas sudokuCanvas;
     private int[,] currentPuzzle = null;
     private int[,] currentSolution = null;
@@ -34,12 +36,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Color localPlayerCellColour = Color.green;
     public Color otherPlayerCellColour = Color.blue;
 
+    public static int NullCellValue = 0;
+
 
 
     private void Start()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
+            GameMode = (GameMode)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
             if (PhotonNetwork.IsMasterClient)
             {
                 NewGame();

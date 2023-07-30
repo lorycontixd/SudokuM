@@ -25,6 +25,7 @@ public class LobbyMenu : BaseMenu
     [SerializeField] private Transform playerListHolder;
     [SerializeField] private TextMeshProUGUI roomNameText;
     [SerializeField] private TextMeshProUGUI roomCodeText;
+    [SerializeField] private TextMeshProUGUI gameModeText;
     [SerializeField] private TextMeshProUGUI waitingForHostText;
     [SerializeField] private TextMeshProUGUI boardInitializingText;
     [SerializeField] private ButtonManager startButton;
@@ -56,6 +57,8 @@ public class LobbyMenu : BaseMenu
         }
         roomNameText.text = $"Room name: {PhotonNetwork.CurrentRoom.Name}";
         roomCodeText.text = $"Room code: {PhotonNetwork.CurrentRoom.CustomProperties["code"]}";
+        GameMode mode = (GameMode)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
+        gameModeText.text = $"Game mode: {mode.ToString().Capitalize()}";
         if (waitingForHostText != null)
         {
             waitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);

@@ -22,11 +22,11 @@ public class MatchmakingMenu : BaseMenu
     #endregion
 
     [Header("UI")]
+    [SerializeField] private CreateRoomPanel createRoomPanel;
     [SerializeField] private TextMeshProUGUI connectingText;
     [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] private GameObject roomItemPrefab;
     [SerializeField] private Transform roomItemHolder;
-    [SerializeField] private SwitchManager privateSwitch;
     [SerializeField] private TMP_InputField codeInput;
     [SerializeField] private List<GameObject> deactivatableUI = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI regionText;
@@ -79,6 +79,7 @@ public class MatchmakingMenu : BaseMenu
             SetConnectionTexts(true);
             SetUsernameText(PhotonNetwork.LocalPlayer.NickName);
         }
+        createRoomPanel.Close();
     }
 
     #region Pun Callbacks
@@ -119,11 +120,7 @@ public class MatchmakingMenu : BaseMenu
     }
     public void ButtonCreate()
     {
-        bool isPrivate = privateSwitch.isOn;
-        if ( PhotonNetwork.IsConnectedAndReady)
-        {
-            CreateRoom(isPrivate);
-        }
+        createRoomPanel.Open(this);
     }
     public void ButtonCodeSubmit()
     {
@@ -159,6 +156,9 @@ public class MatchmakingMenu : BaseMenu
     }
     #endregion
 
+
+
+
     void ConnectToEU()
     {
         AppSettings euSettings = new AppSettings();
@@ -168,25 +168,7 @@ public class MatchmakingMenu : BaseMenu
         PhotonNetwork.ConnectUsingSettings(euSettings);
     }
 
-    public void CreateRoom(bool isPrivate)
-    {
-        int index = roomListCache.RoomCacheCount;
-        string roomName = $"Room{index}";
-        RoomOptions opts = new RoomOptions();
-        opts.MaxPlayers = 2;
-        opts.IsOpen = true;
-        opts.IsVisible = true;
-        Hashtable ht = new Hashtable
-        {
-            { "code", RoomCodeGenerator.GenerateCode() },
-            { "p", isPrivate },
-            { "ig", false }
-        };
-        pendingRoomCodeGenerated = ht;
-        opts.CustomRoomPropertiesForLobby = new string[] { "code", "p", "ig" };
-        opts.CustomRoomProperties = ht;
-        PhotonNetwork.CreateRoom(roomName, opts, TypedLobby.Default );
-    }
+    
 
 
     public void UpdateRooms(Dictionary<string, RoomInfo> rooms)
@@ -252,5 +234,10 @@ public class MatchmakingMenu : BaseMenu
         {
             usernameText.text = $"Playing as: {username}";
         }
+    }
+
+    public void SetPendingRoomCreation(Hashtable props)
+    {
+        this.pendingRoomCodeGenerated = props;
     }
 }

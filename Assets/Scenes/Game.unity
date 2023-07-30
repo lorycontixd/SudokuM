@@ -2312,6 +2312,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1667993733}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -2870,6 +2871,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 418330967}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -3399,6 +3401,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1138011827}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -4069,6 +4072,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1688577203}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -4698,6 +4702,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1427840832}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -5131,6 +5136,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1065094670}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -5818,6 +5824,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 547150001}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -7080,6 +7087,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 18709968}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -7793,6 +7801,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 709854876}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -8510,6 +8519,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1781168882}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -9045,6 +9055,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 357669988}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -11365,6 +11376,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1436580835}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -11680,6 +11692,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 132838342}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -12036,6 +12049,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 50195421}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -12218,6 +12232,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 171853233}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -12439,6 +12454,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1034946227}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -13873,6 +13889,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1190370781}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -15262,6 +15279,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 24619281}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -15816,6 +15834,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 859805548}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -15961,6 +15980,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 445202409}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -16143,6 +16163,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 121135408}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -17001,6 +17022,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 51147215}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -17281,6 +17303,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 159893418}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -17426,6 +17449,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 445842434}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -17647,6 +17671,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1403263590}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -17792,6 +17817,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 595663656}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -18011,6 +18037,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1278429255}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -18232,6 +18259,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1200866023}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -18930,6 +18958,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1635821741}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -19277,6 +19306,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1492435555}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -19498,6 +19528,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 387616009}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -20937,6 +20968,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1201103909}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -21325,6 +21357,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1797981916}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -21620,6 +21653,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 816495129}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -21857,6 +21891,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2036047570}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -22002,6 +22037,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2104199723}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -22508,6 +22544,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1618596374}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -22753,6 +22790,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 715335902}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -23839,6 +23877,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1325119627}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -24165,6 +24204,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2645669}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -24599,6 +24639,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 224481899}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -25261,6 +25302,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1540774964}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -25406,6 +25448,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1897236254}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -27168,6 +27211,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 605321775}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -27726,6 +27770,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1503754221}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -28603,6 +28648,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 389356129}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -28990,6 +29036,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1406445140}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -29135,6 +29182,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1634905526}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -29280,6 +29328,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2015415438}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -29894,6 +29943,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1852373028}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -30384,6 +30434,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1378020293}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -30778,6 +30829,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 790183169}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -32113,6 +32165,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2047868317}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -32393,6 +32446,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1179129270}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -33735,7 +33789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a747e2d9180c65448d7f1cf472e2a39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeNumber: -1
+  currentSelectedCell: {fileID: 0}
   gridParent: {fileID: 1559930133}
   currentDigit: 0
   cells: []
@@ -33904,6 +33958,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -34613,6 +34668,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 326110883}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -35028,6 +35084,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1237372321}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -35249,6 +35306,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 107493293}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -36877,6 +36935,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 908769092}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -37174,6 +37233,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1021354758}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -37395,6 +37455,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 782566409}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -38001,6 +38062,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 42785918}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -38288,6 +38350,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 634054471}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -40532,6 +40595,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 836827592}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -40957,6 +41021,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 881079538}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -41102,6 +41167,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1479264024}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -41703,7 +41769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1760330565
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42586,6 +42652,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1825495623}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -43489,6 +43556,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1780337827}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -43985,6 +44053,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1137836606}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -45105,6 +45174,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1398157863}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -45287,6 +45357,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1214720855}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -45432,6 +45503,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 156637149}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -45577,6 +45649,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 233103737}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -45835,6 +45908,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1473798749}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -46654,6 +46728,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1533683293}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -46934,6 +47009,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1159138168}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -47079,6 +47155,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 908817628}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -47224,6 +47301,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 247148096}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -47659,6 +47737,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1264878207}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -47804,6 +47883,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 805671399}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -47949,6 +48029,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 2116717086}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
@@ -48229,6 +48310,7 @@ MonoBehaviour:
   UserIdEdited: 0
   LocalPlayerEdited: 0
   borderImage: {fileID: 1367436621}
+  cellBackground: {fileID: 0}
   onCellClick:
     m_PersistentCalls:
       m_Calls: []
