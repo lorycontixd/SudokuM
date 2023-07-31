@@ -252,7 +252,7 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Lorenzo/Documents/UnityKeys/SudokuM/user.keystore
+  AndroidKeystoreName: C:/Users/loryc/Documents/Unity/Keys/sudokum.keystore
   AndroidKeyaliasName: sudokum
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -308,73 +308,73 @@ PlayerSettings:
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: f6158b9005f17dd4a810ba28d6d489a3, type: 3}
+      - {fileID: 2800000, guid: 5c95ba60d34704747af51e11e65e78df, type: 3}
       m_Width: 192
       m_Height: 192
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: abf39e8e89810c24395a3f2fffa311e5, type: 3}
+      - {fileID: 2800000, guid: f6ca69916f724c043a265bdc6e70f505, type: 3}
       m_Width: 144
       m_Height: 144
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: bc3fe8fe68d7ee64e9ee2088f95883cb, type: 3}
+      - {fileID: 2800000, guid: 1709344f39210634998726583f0925cd, type: 3}
       m_Width: 96
       m_Height: 96
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: e9dc8a7f4e42dbb4a861304584ebce10, type: 3}
+      - {fileID: 2800000, guid: 009ee5536832a64479349185e89eeea9, type: 3}
       m_Width: 72
       m_Height: 72
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 4339a9118b8bf1640b929e7756a4438f, type: 3}
+      - {fileID: 2800000, guid: c78dd119ba6aa6b4abbbd19f4d2a2d87, type: 3}
       m_Width: 48
       m_Height: 48
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: c156673a9c7a2d6489ba4386b2a21e15, type: 3}
+      - {fileID: 0}
       m_Width: 36
       m_Height: 36
       m_Kind: 1
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: f6158b9005f17dd4a810ba28d6d489a3, type: 3}
+      - {fileID: 2800000, guid: 5c95ba60d34704747af51e11e65e78df, type: 3}
       m_Width: 192
       m_Height: 192
       m_Kind: 0
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: abf39e8e89810c24395a3f2fffa311e5, type: 3}
+      - {fileID: 2800000, guid: f6ca69916f724c043a265bdc6e70f505, type: 3}
       m_Width: 144
       m_Height: 144
       m_Kind: 0
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: bc3fe8fe68d7ee64e9ee2088f95883cb, type: 3}
+      - {fileID: 2800000, guid: 1709344f39210634998726583f0925cd, type: 3}
       m_Width: 96
       m_Height: 96
       m_Kind: 0
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: e9dc8a7f4e42dbb4a861304584ebce10, type: 3}
+      - {fileID: 2800000, guid: 009ee5536832a64479349185e89eeea9, type: 3}
       m_Width: 72
       m_Height: 72
       m_Kind: 0
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 4339a9118b8bf1640b929e7756a4438f, type: 3}
+      - {fileID: 2800000, guid: c78dd119ba6aa6b4abbbd19f4d2a2d87, type: 3}
       m_Width: 48
       m_Height: 48
       m_Kind: 0
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: c156673a9c7a2d6489ba4386b2a21e15, type: 3}
+      - {fileID: 0}
       m_Width: 36
       m_Height: 36
       m_Kind: 0
