@@ -1,3 +1,4 @@
+using GooglePlayGames;
 using Michsky.MUIP;
 using NUnit.Framework.Constraints;
 using Photon.Pun;
@@ -9,6 +10,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.VFX;
 
 public class SudokuCanvas : MonoBehaviour
@@ -46,6 +48,8 @@ public class SudokuCanvas : MonoBehaviour
     [SerializeField] private HistoryPanel historyPanel;
     [SerializeField] private GameObject finalPanel;
     [SerializeField] private TextMeshProUGUI finalText;
+    [SerializeField] private TextMeshProUGUI finalScoreGainedText;
+    [SerializeField] private TextMeshProUGUI finalScoreNewText;
     [SerializeField] private TextMeshProUGUI finalWaitingForHostText;
     [SerializeField] private ButtonManager finalNewGameButton;
     [SerializeField] private ButtonManager finalRetryGameButton;
@@ -69,10 +73,14 @@ public class SudokuCanvas : MonoBehaviour
     private DateTime puzzleStartTime = DateTime.MinValue;
     private GameObject currentPanel = null;
     private SudokuCanvasCell lastEditedCell = null;
+    private bool WonGame = false;
 
 
     private void Start()
     {
+        LeaderboardManager.Instance.onGetPlayerScore += OnGetPlayerScore;
+
+        Debug.Log($"[SudokuCanvas] First log");
         if (!PhotonNetwork.IsMasterClient)
         {
             boardLoadingText.gameObject.SetActive(true);
@@ -106,6 +114,8 @@ public class SudokuCanvas : MonoBehaviour
         if (finalPanel != null)
         {
             finalPanel.SetActive(false);
+            finalScoreGainedText.gameObject.SetActive(false);
+            finalScoreNewText.gameObject.SetActive(false);
         }
         if (historyPanel!= null)
         {
@@ -119,6 +129,9 @@ public class SudokuCanvas : MonoBehaviour
         }
         ResetBoard();
     }
+
+    
+
     private void Update()
     {
         if (IsPlaying)
@@ -538,19 +551,98 @@ public class SudokuCanvas : MonoBehaviour
     public void Finish(bool isWin)
     {
         IsPlaying = false;
+        WonGame = isWin;
+        int pscore = int.MinValue;
+        int mscore = int.MinValue;
+        int gscore = int.MinValue;
+        int newscore = int.MinValue;
+        bool isvalid = false;
+
+        // Time race score
+        if (PlayGamesPlatform.Instance.IsAuthenticated())
+        {
+            if (GameManager.Instance != null)
+            {
+                if (GameManager.Instance.GameMode == GameMode.TIMERACE)
+                {
+                    Debug.Log($"[Sudoku] calling scores gplay");
+                    LeaderboardManager.Instance.GetScores();
+                }
+                else
+                {
+                    Debug.LogWarning($"[Sudoku] gamemode not timerace");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[Sudoku] gamemanager is null");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[Sudoku] playgamesplatform is not authenticated => set base ui");
+            if (finalPanel != null)
+            {
+                finalPanel.SetActive(true);
+                if (finalText != null)
+                {
+                    finalText.gameObject.SetActive(true);
+                    finalText.text = WonGame ? "YOU WIN!" : "You lose :(";
+                }
+                if (GameManager.Instance.GameMode == GameMode.TIMERACE)
+                {
+                    finalScoreNewText.gameObject.SetActive(true);
+                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid";
+                }
+                finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+                finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+                finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
+            }
+        }
+    }
+
+    private void OnGetPlayerScore(bool success, int pscore, int maxscore)
+    {
+        // First give poitns if google works
+        int gscore = (WonGame) ? ScoreManager.CalculateTimeraceWin(pscore, maxscore) : ScoreManager.CalculateTimeraceLoss(pscore, maxscore);
+        int newscore = pscore + gscore;
+        if (success)
+        {
+            Debug.Log($"ongetplayer => registering pscore: {pscore}, maxscore: {maxscore}, newscor: {newscore}");
+            LeaderboardManager.Instance.RegisterTimeraceScore(newscore);
+        }
+
+        // Then update ui
         if (finalPanel != null)
         {
             finalPanel.SetActive(true);
-            if(finalText != null)
+            if (finalText != null)
             {
                 finalText.gameObject.SetActive(true);
-                finalText.text = isWin ? "YOU WIN!" : "You lose :(";
+                finalText.text = WonGame ? "YOU WIN!" : "You lose :(";
+            }
+            if (GameManager.Instance.GameMode == GameMode.TIMERACE)
+            {
+                finalScoreNewText.gameObject.SetActive(true);
+
+                if (success)
+                {
+                    finalScoreGainedText.gameObject.SetActive(true);
+                    finalScoreGainedText.text = $"{gscore} points";
+                    finalScoreNewText.text = $"New Score: {newscore}";
+                    LeaderboardManager.Instance.RegisterTimeraceScore(newscore);
+                }
+                else
+                {
+                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid => {gscore}, {pscore}, {maxscore}, {newscore}";
+                }
             }
             finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         }
     }
+
     public void FinishAndClose(bool isWin, float delay = 5f)
     {
         StartCoroutine(FinishCo(isWin, delay));

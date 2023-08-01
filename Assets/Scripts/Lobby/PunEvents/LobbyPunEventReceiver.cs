@@ -32,6 +32,7 @@ public class LobbyPunEventReceiver : MonoBehaviour, IOnEventCallback
                 LobbyMenu menu = (LobbyMenu)LobbyMenuController.Instance.activeMenu;
                 if (menu != null)
                 {
+                    Debug.Log($"[LobbyPunReceiver] Starting menu!");
                     menu.StartGame();
                 }
                 break;

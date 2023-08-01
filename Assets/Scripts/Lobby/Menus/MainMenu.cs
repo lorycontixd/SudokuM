@@ -30,6 +30,14 @@ public class MainMenu : BaseMenu
 
     public void ButtonPlay()
     {
+        if (GooglePlayManager.Instance.IsActive)
+        {
+            if (!GooglePlayManager.Instance.IsAuthenticated)
+            {
+                Managers.NotificationManager.Instance.Error("Login error", "Play games is active, but you are not logged in");
+                return;
+            }
+        }
         if (nameInput != null)
         {
             if (ValidateName())

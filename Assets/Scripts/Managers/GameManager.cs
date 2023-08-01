@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             GameMode = (GameMode)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
             if (PhotonNetwork.IsMasterClient)
             {
+                Debug.Log($"GameManager->Master->creating new game");
                 NewGame();
             }
         }
@@ -57,10 +58,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         SudokuGenerator sg = new SudokuGenerator();
         currentPuzzle = sg.generate();
+        Debug.Log($"[GameManager] new puzzle generated!");
         SudokuSolver solver = new SudokuSolver(currentPuzzle);
         int code = solver.solve();
+        Debug.Log($"[GameManager] new puzzle solved!");
         currentSolution = solver.getSolvedBoard();
-        currentRating = SudokuStore.calculatePuzzleRating(currentPuzzle);
+        //currentRating = SudokuStore.calculatePuzzleRating(currentPuzzle);
+        currentRating = -1;
         if (HistoryManager.Instance != null)
         {
             HistoryManager.Instance.Clear();
@@ -69,6 +73,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             StatsManagerCoop.Instance.ResetStats();
         }
+        Debug.Log($"Sending board across!");
         GamePunEventSender.SendBoard(currentPuzzle, currentSolution, currentRating);
     }
 

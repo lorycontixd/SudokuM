@@ -119,6 +119,7 @@ public class LobbyMenu : BaseMenu
         PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
         PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.CurrentRoom.IsOpen = false;
+        Debug.Log($"LobbyMenu => Loading level with Photon!");
         PhotonNetwork.LoadLevel("Game");
     }
 

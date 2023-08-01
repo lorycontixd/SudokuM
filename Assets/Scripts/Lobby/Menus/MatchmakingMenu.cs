@@ -95,6 +95,7 @@ public class MatchmakingMenu : BaseMenu
         SetConnectionTexts(true);
         SetUsernameText(PhotonNetwork.LocalPlayer.NickName);
         regionText.text = $"Region: {PhotonNetwork.CloudRegion}";
+        AchievementsManager.Instance.GiveFirstTimeAchievement();
     }
     public override void OnCreatedRoom()
     {

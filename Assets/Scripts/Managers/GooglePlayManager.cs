@@ -29,14 +29,25 @@ public class GooglePlayManager : MonoBehaviour
     }
     #endregion
 
+    public bool IsActive = true;
+    public bool IsAuthenticated { get => PlayGamesPlatform.Instance.IsAuthenticated(); }
+
+    public static Dictionary<string, string> GoogleAchievementKeys;
+    public static Dictionary<string, string> GoogleLeaderboardKeys;
+
     private bool reconnectAttempted = false;
-    public static PlayGamesPlatform platform;
+
 
     private void Start()
     {
-        //Debug.Log($"[GP] Initializing!!");
-        //PlayGamesPlatform.Activate();
-        //PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+        if (IsActive)
+        {
+            Debug.Log($"[GP] Activating debug log");
+            PlayGamesPlatform.DebugLogEnabled = true;
+            Debug.Log($"[GP] Initializing!!");
+            PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+            Social.localUser.Authenticate((bool success) => { Debug.Log($"Social auth success: {success}"); });
+        }
     }
     internal void ProcessAuthentication(SignInStatus status)
     {
