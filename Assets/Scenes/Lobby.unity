@@ -32690,7 +32690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MajorVersion: 0
   MinorVersion: 4
-  PatchVersion: 0
+  PatchVersion: 2
   ShareVersionWithPhoton: 1
 --- !u!4 &1965390770
 Transform:

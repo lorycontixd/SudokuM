@@ -416,7 +416,7 @@ public class SudokuCanvas : MonoBehaviour
                 if (userid == PhotonNetwork.LocalPlayer.ActorNumber)
                 {
                     bool isComplete = IsPuzzleComplete();
-                    if (IsPuzzleCompleteAndCorrect())
+                    if (IsPuzzleCompleteAndCorrect())   
                     {
                         GamePunEventSender.SendFinish(userid, userid);
                     }
@@ -434,6 +434,10 @@ public class SudokuCanvas : MonoBehaviour
                 if (currentErrors == MaxErrors)
                 {
                     Finish(false);
+                    GamePunEventSender.SendFinish(
+                        PhotonNetwork.LocalPlayer.ActorNumber,
+                        PhotonNetwork.PlayerListOthers.First().ActorNumber
+                    );
                 }
             }
         }

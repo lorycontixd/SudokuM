@@ -65,6 +65,12 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             int userid = (int)data[0];
             int winnerid = (int)data[1];
             SudokuCanvas.Instance.FinishAndClose(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
+        }else if (eventCode == GamePunEventSender.SendLossEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int userid = (int)data[0];
+            int loserid = (int)data[1];
+            SudokuCanvas.Instance.FinishAndClose(loserid != PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 }

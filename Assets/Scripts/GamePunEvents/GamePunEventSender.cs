@@ -15,6 +15,8 @@ public class GamePunEventSender
     public const byte SendDigitSelectEventCode = 3;
     public const byte SendHalfBoardEventCode = 4;
     public const byte SendFinishEventCode = 5;
+    public const byte SendLossEventCode = 6;
+
 
     public static void SendBoard(int[,] board, int[,] solution, int rating)
     {
@@ -69,5 +71,12 @@ public class GamePunEventSender
         object[] content = new object[] { userid, winnerid };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(SendFinishEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public static void SendLoss(int userid, int loserid)
+    {
+        object[] content = new object[] { userid, loserid };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        PhotonNetwork.RaiseEvent(SendLossEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 }

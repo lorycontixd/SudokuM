@@ -100,6 +100,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     #region Pun Callbacks
     public override void OnLeftRoom()
     {
+        PhotonNetwork.JoinLobby();
+    }
+    public override void OnJoinedLobby()
+    {
         PhotonNetwork.LoadLevel("Lobby");
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)

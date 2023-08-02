@@ -36,8 +36,7 @@ public class MainMenu : BaseMenu
             {
                 if (!GooglePlayManager.Instance.IsAuthenticated)
                 {
-                    Managers.NotificationManager.Instance.Error("Login error", "Play games is active, but you are not logged in");
-                    return;
+                    Managers.NotificationManager.Instance.Warning("Login error", "Play games is active, but you are not logged in.");
                 }
             }
         }
