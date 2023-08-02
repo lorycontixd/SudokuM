@@ -1,5 +1,5 @@
 # ninja log v5
-1	266	7125791351388872	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	6c0074fb2012acc9
-267	603	7125791354115077	C:/Users/Lorenzo/Documents/UnityProjects/SudokuM/Library/PramData/AndroidApplicationController/Cache/com.Lore.SudokuM/gradle-project/unityLibrary/build/intermediates/cxx/Debug/5w51261r/obj/arm64-v8a/libswappywrapper.so	641efc61c8a64c95
-3	260	7125796460478529	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	6c0074fb2012acc9
-260	598	7125796463145370	C:/Users/Lorenzo/Documents/UnityProjects/SudokuM/Library/PramData/AndroidApplicationController/Cache/com.Lore.SudokuM/gradle-project/unityLibrary/build/intermediates/cxx/Debug/5w51261r/obj/arm64-v8a/libswappywrapper.so	641efc61c8a64c95
+2	189	7126689805598350	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	6c0074fb2012acc9
+189	502	7126689808069340	C:/Users/Lorenzo/Documents/UnityProjects/SudokuM/Library/PramData/AndroidApplicationController/Cache/com.Lore.SudokuM/gradle-project/unityLibrary/build/intermediates/cxx/Debug/5w51261r/obj/arm64-v8a/libswappywrapper.so	641efc61c8a64c95
+5	241	7126730932795620	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	6c0074fb2012acc9
+242	638	7126730935416823	C:/Users/Lorenzo/Documents/UnityProjects/SudokuM/Library/PramData/AndroidApplicationController/Cache/com.Lore.SudokuM/gradle-project/unityLibrary/build/intermediates/cxx/Debug/5w51261r/obj/arm64-v8a/libswappywrapper.so	641efc61c8a64c95

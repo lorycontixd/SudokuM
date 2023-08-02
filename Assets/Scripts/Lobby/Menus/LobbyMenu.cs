@@ -159,6 +159,18 @@ public class LobbyMenu : BaseMenu
     #region Buttons
     public void ButtonStart()
     {
+        if (!DebugManager.Instance.DebugGame)
+        {
+            int required = MatchmakingManager.GameModePlayers[(GameMode)PhotonNetwork.CurrentRoom.CustomProperties["mode"]];
+            if (PhotonNetwork.CurrentRoom.PlayerCount != required )
+            {
+                string playersString = (required == 1) ? "player" : "players";
+
+
+                Managers.NotificationManager.Instance.Warning("Cannot start game", $"{required} {playersString} required to start");
+                return;
+            }
+        }
         startButton.Interactable(false);
         settingsButton.Interactable(false);
         quitButton.Interactable(false);

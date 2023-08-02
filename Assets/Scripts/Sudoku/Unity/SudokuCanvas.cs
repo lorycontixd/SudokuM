@@ -35,7 +35,8 @@ public class SudokuCanvas : MonoBehaviour
     public static int MaxErrors = 3;
     //public int activeNumber = -1;
     public SudokuCanvasCell currentSelectedCell = null;
-    public int MyCompletedCells { get => cells.Where(c => c.Value >= 1 && c.Value <= 9).Count(); }  
+    public int MyCompletedCells { get => cells.Where(c => c.Value >= 1 && c.Value <= 9).Count(); }
+    public bool halfBoardSent { get; private set; } = false;
 
     [SerializeField] private GameObject gridParent = null;
     public int currentDigit;
@@ -46,21 +47,22 @@ public class SudokuCanvas : MonoBehaviour
     [Header("UI")]
     [SerializeField] private StatsPanel statsPanel;
     [SerializeField] private HistoryPanel historyPanel;
+    [SerializeField] private TextMeshProUGUI errorsText;
+    [SerializeField] private TextMeshProUGUI ratingText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI boardLoadingText;
+    [SerializeField] private EnemyHalfBoard enemyHalfBoard = null;
+
+    [Header("Final Panel")]
     [SerializeField] private GameObject finalPanel;
-    [SerializeField] private TextMeshProUGUI finalText;
+    [SerializeField] private TextMeshProUGUI finalText; // you lose/you win text
     [SerializeField] private TextMeshProUGUI finalScoreGainedText;
     [SerializeField] private TextMeshProUGUI finalScoreNewText;
     [SerializeField] private TextMeshProUGUI finalWaitingForHostText;
     [SerializeField] private ButtonManager finalNewGameButton;
     [SerializeField] private ButtonManager finalRetryGameButton;
-    [SerializeField] private TextMeshProUGUI errorsText;
-    [SerializeField] private TextMeshProUGUI ratingText;
-    [SerializeField] private TextMeshProUGUI timeText;
-    [SerializeField] private TextMeshProUGUI boardLoadingText;
+    [SerializeField] private ButtonManager finalLeaveButton;
 
-    [Header("Settings")]
-    [SerializeField] private bool DebugGame;
-    [SerializeField] private bool DebugText;
 
 
     private int[,] currentPuzzle;
@@ -198,9 +200,9 @@ public class SudokuCanvas : MonoBehaviour
         IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
-        if (PhotonNetwork.IsMasterClient && DebugGame)
+        if (PhotonNetwork.IsMasterClient && DebugManager.Instance.DebugGame && DebugManager.Instance.CanvasFillForMasterClient)
         {
-            StartCoroutine(AutoFillGradualCo(2, 3f));
+            StartCoroutine(AutoFillGradualCo(DebugManager.Instance.CanvasFillAmount));
         }
         
     }
@@ -231,6 +233,7 @@ public class SudokuCanvas : MonoBehaviour
         currentErrors = 0;
         IsEmpty = true;
         IsPlaying = false;
+        halfBoardSent = false;
 
         ResetValueButtons();
         historyPanel.ClearHistoryList();
@@ -246,10 +249,24 @@ public class SudokuCanvas : MonoBehaviour
             cell.SetNewValue(PhotonNetwork.LocalPlayer.ActorNumber, val, true);
         }
     }
-    private void AutoFillGradual(int except = 1)
+
+    public enum AutoFillType
+    {
+        COUNT,
+        EXCEPT
+    }
+    private void AutoFillGradual(int n, AutoFillType type = AutoFillType.COUNT)
     {
         List<SudokuCanvasCell> empties = cells.Where(cell => !cell.IsLocked).ToList();
-        List<SudokuCanvasCell> toFill = empties.OrderBy(a => new System.Random().Next()).ToList().Take(empties.Count - except).ToList();
+        List<SudokuCanvasCell> toFill;
+        if (type == AutoFillType.EXCEPT)
+        {
+            toFill = empties.OrderBy(a => new System.Random().Next()).ToList().Take(empties.Count - n).ToList();
+        }
+        else
+        {
+            toFill = empties.OrderBy(a => new System.Random().Next()).ToList().Take(n).ToList();
+        }
         foreach (SudokuCanvasCell cell in toFill)
         {
             int val = currentSolvedBoard[cell.Row, cell.Col];
@@ -537,6 +554,14 @@ public class SudokuCanvas : MonoBehaviour
                     //UpdateCellMultiplayer(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells);
                     //Debug.Log($"Sending move on mode TimeRace!");
                     GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells+1, Photon.Realtime.ReceiverGroup.All);
+                    int requiredHalf = (int)SudokuBoard.BOARD_CELLS_NUMBER / 2;
+                    Debug.Log($"- Checking for half board: {MyCompletedCells}, {requiredHalf}, {!halfBoardSent} ==> {MyCompletedCells == requiredHalf && !halfBoardSent}");
+                    if (MyCompletedCells == requiredHalf && !halfBoardSent)
+                    {
+                        Debug.Log($"I reached half of the board! Sending notif");
+                        GamePunEventSender.SendHalfBoard(PhotonNetwork.LocalPlayer.ActorNumber);
+                        halfBoardSent = true;
+                    }
                     break;
                 case GameMode.COOP:
                     GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells+1, Photon.Realtime.ReceiverGroup.All);
@@ -592,7 +617,7 @@ public class SudokuCanvas : MonoBehaviour
                 if (GameManager.Instance.GameMode == GameMode.TIMERACE)
                 {
                     finalScoreNewText.gameObject.SetActive(true);
-                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid";
+                    finalScoreNewText.text = $"No points were given for an unranked match";
                 }
                 finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
                 finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
@@ -634,7 +659,7 @@ public class SudokuCanvas : MonoBehaviour
                 }
                 else
                 {
-                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid => {gscore}, {pscore}, {maxscore}, {newscore}";
+                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid";
                 }
             }
             finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
@@ -765,4 +790,19 @@ public class SudokuCanvas : MonoBehaviour
         }
     }
 
+    #region Enemy Half board
+    public void ShowEnemyHalfBoard()
+    {
+        if (enemyHalfBoard != null)
+        {
+            StartCoroutine(ShowEnemyHalfBoardCo(5f));
+        }
+    }
+    private IEnumerator ShowEnemyHalfBoardCo(float duration = 3f)
+    {
+        enemyHalfBoard.Show();
+        yield return new WaitForSeconds(duration);
+        enemyHalfBoard.Hide();
+    }
+    #endregion
 }

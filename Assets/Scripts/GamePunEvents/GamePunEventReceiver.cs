@@ -44,7 +44,22 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             int completedCells = (int)data[7];
             Debug.Log($"[EventReceiver] Recived move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}, {completedCells}");
             SudokuCanvas.Instance.UpdateCellMultiplayer(userid, username, row, col, digit, isCorrect, isDeleteMove, completedCells);
-        }else if (eventCode == GamePunEventSender.SendFinishEventCode)
+        }
+        else if(eventCode == GamePunEventSender.SendHalfBoardEventCode)
+        {
+            Debug.Log($"RECEIVED HALF BOARD CODE");
+            object[] data = (object[])photonEvent.CustomData;
+            int userid = (int)data[0];
+            if (AudioManager.Instance != null)
+            {
+                bool success = AudioManager.Instance.PlayHalfBoardNotification();
+                if (success)
+                {
+                    SudokuCanvas.Instance.ShowEnemyHalfBoard();
+                }
+            }
+        }
+        else if (eventCode == GamePunEventSender.SendFinishEventCode)
         {
             object[] data = (object[])photonEvent.CustomData;
             int userid = (int)data[0];
