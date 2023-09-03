@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon;
+using Managers;
 using Michsky.MUIP;
 using Photon.Pun;
 using Photon.Realtime;
@@ -36,6 +37,31 @@ public class LobbyMenu : BaseMenu
     [SerializeField] private HostMigrationMode hostMigrationMode = HostMigrationMode.FIRST;
     [SerializeField] private bool AllowSinglePlay;
 
+    public override MenuType Type => MenuType.LOBBY;
+
+    private bool _pendingMasterSwitch = false;
+
+
+    private void Start()
+    {
+        DatabaseManager.Instance.onQuery.AddListener(OnDbQuery);
+    }
+
+    private void OnDbQuery(DatabaseQueryResultType resultType, QueryData data)
+    {
+        if (data.QueryType == QueryType.GETUSER)
+        {
+            if (resultType == DatabaseQueryResultType.SUCCESS)
+            {
+                if (data.extraInfo == "lobby_menu")
+                {
+                    GetUserQuery udata = (GetUserQuery)data;
+                    User otheruser = udata.user;
+                    SessionManager.Instance.SetOtherUser(otheruser);
+                }
+            }
+        }
+    }
 
     public override void Close()
     {
@@ -44,7 +70,7 @@ public class LobbyMenu : BaseMenu
     public override void Open()
     {
         SetUI();
-        UpdatePlayerList();
+        UpdatePlayerListUI();
     }
 
 
@@ -79,7 +105,7 @@ public class LobbyMenu : BaseMenu
             Destroy(playerListHolder.GetChild(i).gameObject);
         }
     }
-    private void UpdatePlayerList()
+    private void UpdatePlayerListUI()
     {
         ClearPlayerList();
         if (playerListItemPrefab == null)
@@ -102,7 +128,7 @@ public class LobbyMenu : BaseMenu
             bool canLoad = AllowSinglePlay ? (PhotonNetwork.CurrentRoom.PlayerCount == 1 || PhotonNetwork.CurrentRoom.PlayerCount == 2) : PhotonNetwork.CurrentRoom.PlayerCount == 2;
             if (canLoad)
             {
-                StartCoroutine(StartGameCo());
+                StartCoroutine(StartGameCo(1.3f));
             }
             else
             {
@@ -147,12 +173,30 @@ public class LobbyMenu : BaseMenu
     #region Pun Callbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        UpdatePlayerList();
+        UpdatePlayerListUI();
+        int otherId = (int)newPlayer.CustomProperties["uid"];
+        Debug.Log($"Entered player with id: {otherId}");
+        DatabaseManager.Instance.GetUserFull(otherId, "lobby_menu");
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UpdatePlayerList();
+        UpdatePlayerListUI();
         SetUI();
+        int otherId = (int)otherPlayer.CustomProperties["uid"];
+        SessionManager.Instance.SetOtherUser(null);
+    }
+    public override void OnLeftRoom()
+    {
+        SessionManager.Instance.SetOtherUser(null);
+        controller.SwitchMenu(MenuType.MATCHMAKING);
+    }
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (_pendingMasterSwitch)
+        {
+            _pendingMasterSwitch = false;
+            PhotonNetwork.LeaveRoom();
+        }
     }
     #endregion
 
@@ -185,14 +229,18 @@ public class LobbyMenu : BaseMenu
     }
     public void ButtonQuit()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
+            _pendingMasterSwitch = true;
             Player newHost = PickNewMasterclient();
             PhotonNetwork.SetMasterClient(newHost);
             LobbyPunEventSender.SendHostMigration(newHost);
         }
-        PhotonNetwork.LeaveRoom();
-        controller.SwitchMenu(MenuType.MATCHMAKING);
+        else
+        {
+            PhotonNetwork.LeaveRoom();
+        }
     }
+
     #endregion
 }

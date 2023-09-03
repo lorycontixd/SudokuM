@@ -37,8 +37,8 @@ public class DataManager : MonoBehaviour
 
     // Privates
     public bool IsReady { get; private set; }
-    private bool ReadGoogleData = false;
-    private bool ReadVersionData = false;
+    public bool ReadGoogleData { get; private set; }
+    public bool ReadVersionData { get; private set; }
 
 
     private IEnumerator Start()
@@ -63,15 +63,22 @@ public class DataManager : MonoBehaviour
 
     private void OnStorageOperation(string fileUrl, StorageManager.Operation operation, bool isSuccess, RestResponse response, string content)
     {
-        if (fileUrl == StorageManager.Instance.BuildUrl(googleDataCloudFile))
+        if (!response.IsError)
         {
-            GoogleData = JsonConvert.DeserializeObject<GoogleData>(content);
-            Debug.Log($"Successfully read google data: {GoogleData} =>  {GoogleData.ProjectID}, {GoogleData.Achievements[0].Name}");
-            ReadGoogleData = true;
+            if (fileUrl == StorageManager.Instance.BuildUrl(googleDataCloudFile))
+            {
+                GoogleData = JsonConvert.DeserializeObject<GoogleData>(content);
+                Debug.Log($"Successfully read google data: {GoogleData} =>  {GoogleData.ProjectID}, {GoogleData.Achievements[0].Name}");
+                ReadGoogleData = true;
+            }
+            if (fileUrl == StorageManager.Instance.BuildUrl(versionsCloudFile))
+            {
+
+            }
         }
-        if (fileUrl == StorageManager.Instance.BuildUrl(versionsCloudFile))
+        else
         {
-            
-        } 
+
+        }
     }
 }

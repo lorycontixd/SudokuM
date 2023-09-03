@@ -10,10 +10,10 @@ public class MatchmakingListItem : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI roomNameText;
     [SerializeField] private TextMeshProUGUI playerCountText;
-    [SerializeField] private Image visibleImage;
-    [SerializeField] private Image unvisibleImage;
     [SerializeField] private Image lockedImage;
     [SerializeField] private Image unlockedImage;
+    [SerializeField] private Image rankedImage;
+    [SerializeField] private Image unrankedImage;
 
     public string RoomName { get { return roomInfo.Name; } }
     public string RoomCode { get { return roomInfo.CustomProperties["code"].ToString(); } }
@@ -25,13 +25,14 @@ public class MatchmakingListItem : MonoBehaviour
     {
         if (roomInfo != null)
         {
+            bool isRanked = (bool)roomInfo.CustomProperties["r"];
             this.roomInfo = roomInfo;
             roomNameText.text = roomInfo.Name;
             playerCountText.text = $"{roomInfo.PlayerCount}/{roomInfo.MaxPlayers}";
-            visibleImage.gameObject.SetActive(roomInfo.IsVisible);
-            unvisibleImage.gameObject.SetActive(!roomInfo.IsVisible);
             unlockedImage.gameObject.SetActive(roomInfo.IsOpen);
             lockedImage.gameObject.SetActive(!roomInfo.IsOpen);
+            rankedImage.gameObject.SetActive(isRanked);
+            unrankedImage.gameObject.SetActive(!isRanked);
         }
     }
 

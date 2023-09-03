@@ -1,3 +1,4 @@
+using Managers;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
@@ -26,6 +27,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     #endregion
 
     public GameMode GameMode { get; private set; }
+    public bool IsRankedGame { get; private set; }
+    public bool IsPrivateGame { get; private set; }
+    public string RoomCode { get; private set; }
 
     [SerializeField] private SudokuCanvas sudokuCanvas;
     private int[,] currentPuzzle = null;
@@ -42,9 +46,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+
+        DatabaseManager.Instance.onQuery.AddListener(OnDbQuery);
         if (PhotonNetwork.IsConnectedAndReady)
         {
             GameMode = (GameMode)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
+            IsRankedGame = (bool)PhotonNetwork.CurrentRoom.CustomProperties["r"];
+            IsPrivateGame = (bool)PhotonNetwork.CurrentRoom.CustomProperties["p"];
+            RoomCode = (string)PhotonNetwork.CurrentRoom.CustomProperties["code"];
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.Log($"GameManager->Master->creating new game");
@@ -53,6 +62,20 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private void OnDbQuery(DatabaseQueryResultType resultType, QueryData data)
+    {
+        if (data.QueryType == QueryType.CREATEGAMEINSTANCE)
+        {
+            if (resultType == DatabaseQueryResultType.SUCCESS)
+            {
+                CreateGameInstanceQuery gidata = (CreateGameInstanceQuery)data;
+                GameInstance gameInstance = gidata.gameInstance;
+                Debug.Log($"Create Game INstance successful ==> GI: {gameInstance.User1}, {gameInstance.User2}, ir: {gameInstance.IsRankedGame}, ip: {gameInstance.PhotonRoomIsPrivate}");
+                SessionManager.Instance.SetGameInstance(gameInstance);
+                GamePunEventSender.SendGameInstance(gameInstance);
+            }
+        }
+    }
 
     public void NewGame()
     {
@@ -73,8 +96,29 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             StatsManagerCoop.Instance.ResetStats();
         }
+
         Debug.Log($"Sending board across!");
         GamePunEventSender.SendBoard(currentPuzzle, currentSolution, currentRating);
+
+        if (DatabaseManager.Instance != null)
+        {
+            Debug.LogWarning($"Creating game instance!");
+            DatabaseManager.Instance.CreateGameInstance(
+                SessionManager.Instance.ActiveUser,
+                SessionManager.Instance.OtherUser,
+                GameMode,
+                IsRankedGame,
+                IsPrivateGame,
+                RoomCode,
+                PhotonNetwork.ServerTimestamp,
+                PhotonNetwork.ServerAddress,
+                "0.0.0",
+                //PhotonNetwork.GameVersion,
+                PhotonNetwork.AppVersion,
+                PhotonNetwork.CloudRegion,
+                PhotonNetwork.IsMasterClient
+            );
+        }
     }
 
     public void RetryGame()
@@ -89,6 +133,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             StatsManagerCoop.Instance.ResetStats();
         }
     }
+    
 
     public void Quit()
     {
@@ -98,17 +143,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     #region Pun Callbacks
+    
     public override void OnLeftRoom()
     {
-        PhotonNetwork.JoinLobby();
+        Debug.Log($"I left the room! ==> Am i in lobby? {PhotonNetwork.InLobby}, Am i connected? {PhotonNetwork.IsConnected}");
     }
-    public override void OnJoinedLobby()
-    {
-        PhotonNetwork.LoadLevel("Lobby");
-    }
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        PhotonNetwork.LeaveRoom();
-    }
+    
     #endregion
 }

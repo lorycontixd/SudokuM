@@ -8,10 +8,12 @@ using UnityEngine.UI;
 [Serializable]
 public enum MenuType
 {
+    LOGIN,
     MAIN,
     MATCHMAKING,
     LOBBY,
-    SETTINGS
+    SETTINGS,
+    REGISTER
 }
 
 
@@ -33,7 +35,7 @@ public interface AnimatedButton
 public abstract class BaseMenu : MonoBehaviourPunCallbacks
 {
     public string Name;
-    public MenuType Type;
+    public abstract MenuType Type { get; }
     protected LobbyMenuController controller;
 
     public void SetController(LobbyMenuController controller)

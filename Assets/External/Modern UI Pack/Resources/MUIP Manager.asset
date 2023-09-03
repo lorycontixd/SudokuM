@@ -31,8 +31,8 @@ MonoBehaviour:
   selectorFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   selectorColor: {r: 1, g: 1, b: 1, a: 1}
   selectorHighlightedColor: {r: 0.1764706, g: 0.25490198, b: 0.33333334, a: 1}
-  inputFieldFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
-  inputFieldColor: {r: 1, g: 1, b: 1, a: 1}
+  inputFieldFont: {fileID: 11400000, guid: 5094b715585444e90b7306721788dae5, type: 2}
+  inputFieldColor: {r: 0, g: 0, b: 0, a: 1}
   modalWindowTitleFont: {fileID: 11400000, guid: fa328c1ae3ffb6b4583cf371153b0be6, type: 2}
   modalWindowContentFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   modalWindowTitleColor: {r: 1, g: 1, b: 1, a: 1}
@@ -51,10 +51,10 @@ MonoBehaviour:
   notificationIconColor: {r: 1, g: 1, b: 1, a: 1}
   progressBarLabelFont: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}
   progressBarLabelFontSize: 25
-  progressBarColor: {r: 1, g: 1, b: 1, a: 1}
-  progressBarBackgroundColor: {r: 1, g: 1, b: 1, a: 0.05882353}
+  progressBarColor: {r: 0.46415097, g: 0.57611364, b: 0.7735849, a: 1}
+  progressBarBackgroundColor: {r: 0, g: 0, b: 0, a: 0.1764706}
   progressBarLoopBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  progressBarLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  progressBarLabelColor: {r: 0.46666667, g: 0.5764706, b: 0.7764706, a: 1}
   scrollbarColor: {r: 1, g: 1, b: 1, a: 1}
   scrollbarBackgroundColor: {r: 1, g: 1, b: 1, a: 0.09803922}
   sliderLabelFont: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}

@@ -28,6 +28,7 @@ public class LobbyMenuController : MonoBehaviour
 
     [SerializeField] private List<BaseMenu> menus = new List<BaseMenu>();
     public BaseMenu activeMenu { get; private set; } = null;
+    [SerializeField] private BaseMenu initialMenu;
     public UnityEvent<MenuType, MenuType> onMenuSwitch; // Params = (old menu, new menu)
 
     [Header("Settings")]
@@ -62,9 +63,25 @@ public class LobbyMenuController : MonoBehaviour
     private void SetInitialMenu()
     {
         CloseAllMenus();
-        activeMenu = GetMenuByType(MenuType.MAIN);
-        activeMenu.gameObject.SetActive(true);
-        activeMenu.Open();
+        if (initialMenu != null)
+        {
+            activeMenu = initialMenu;
+            activeMenu.gameObject.SetActive(true);
+            activeMenu.Open();
+        }
+        else
+        {
+            activeMenu = GetMenuByType(MenuType.LOGIN);
+            if (activeMenu != null)
+            {
+                activeMenu.gameObject.SetActive(true);
+                activeMenu.Open();
+            }
+            else
+            {
+                throw new Exception($"[LobbyMenuController] Initial menu not passed and login menu was not found.");
+            }
+        }
     }
     private void SetControllerToMenus()
     {
@@ -105,6 +122,10 @@ public class LobbyMenuController : MonoBehaviour
     public BaseMenu GetMenuByType(MenuType type)
     {
         return menus.FirstOrDefault(m => m.Type == type);
+    }
+    public BaseMenu GetMenuByName(string name)
+    {
+        return menus.FirstOrDefault(m => m.Name == name);
     }
 
     public void SwitchMenu(MenuType type)

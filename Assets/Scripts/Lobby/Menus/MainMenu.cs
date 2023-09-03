@@ -4,84 +4,60 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainMenu : BaseMenu
 {
-    [Header("UI")]
-    [SerializeField] private InputField nameInput;
-    [SerializeField] private Toggle rememberNameToggle;
-    
+    public override MenuType Type => MenuType.MAIN;
+
+    [SerializeField] private bool IsSettingsMenuActive = false;
+   
+
     public override void Close()
     {
     }
 
     public override void Open()
     {
-        if (PlayerPrefs.HasKey("username"))
-        {
-            nameInput.SetTextWithoutNotify(PlayerPrefs.GetString("username"));
-            rememberNameToggle.isOn = true;
-        }
     }
 
-
-    public void ButtonPlay()
+    public void UpdateUI()
     {
-        if (!Application.isEditor)
-        {
-            if (GooglePlayManager.Instance.IsActive)
-            {
-                if (!GooglePlayManager.Instance.IsAuthenticated)
-                {
-                    Managers.NotificationManager.Instance.Warning("Login error", "Play games is active, but you are not logged in.");
-                }
-            }
-        }
-        if (nameInput != null)
-        {
-            if (ValidateName())
-            {
-                if (controller != null)
-                {
-                    if (rememberNameToggle.isOn)
-                    {
-                        PlayerPrefs.SetString("username", nameInput.text);
-                    }
-                    else
-                    {
-                        if (PlayerPrefs.HasKey("username"))
-                        {
-                            PlayerPrefs.DeleteKey("username");
-                        }
-                    }
-                    PhotonNetwork.NickName = nameInput.text;
-                    controller.SwitchMenu(MenuType.MATCHMAKING);
-                }
-            }
-        }
-        
     }
 
-    private bool ValidateName()
+    public void ButtonSingleplayer()
     {
-        bool lengthValid = nameInput.text.Length > 5 && nameInput.text.Length < 20;
-        if (!lengthValid)
-        {
-            Managers.NotificationManager.Instance.Warning("Invalid username", $"Length of username must be between 5 and 20 characters, not {nameInput.text.Length} ");
-            return false;
-        }
-        return true;
+        Managers.NotificationManager.Instance.Warning("Mode unavailable", "This game mode is currently unavailable. Try again later!");
+        return;
     }
 
-    public void ButtonQuit() {
-        
+    public void ButtonMultiplayer ()
+    {
+        if (SessionManager.Instance.ActiveUser != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            controller.SwitchMenu(MenuType.MATCHMAKING);
+        }
+        else
+        {
+            controller.SwitchMenu(MenuType.LOGIN);
+        }
+
+    }
+
+    public void ButtonSettings()
+    {
+        if (!IsSettingsMenuActive)
+        {
+            Managers.NotificationManager.Instance.Info("Feature incoming", "This feature is on its way. Please be patient!");
+            return;
+        }
+        controller.SwitchMenu(MenuType.SETTINGS);
     }
 
     #region Pun callbacks
-    
 
     #endregion
 }

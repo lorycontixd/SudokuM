@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SettingsMenu : BaseMenu
 {
+    public override MenuType Type => MenuType.SETTINGS;
+
+
     public override void Close()
     {
     }
@@ -11,4 +14,5 @@ public class SettingsMenu : BaseMenu
     public override void Open()
     {
     }
+
 }

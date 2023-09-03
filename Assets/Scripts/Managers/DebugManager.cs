@@ -24,6 +24,9 @@ public class DebugManager : MonoBehaviour
 
     public bool DebugGame;
     public bool DebugText;
+    public bool DebugAutofill;
+    public bool ShowDebugButton;
+    public string DebugAppService = "localhost/phpapp";
 
     [Header("Board Fill")]
     public bool CanvasFillForMasterClient;

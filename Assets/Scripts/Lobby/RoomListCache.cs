@@ -7,12 +7,37 @@ using UnityEngine;
 
 public class RoomListCache : MonoBehaviourPunCallbacks
 {
-    private TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
+    #region Singleton
+    private static RoomListCache _instance;
+    public static RoomListCache Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+    #endregion
+
+    private TypedLobby customLobby = new TypedLobby("MainLobby", LobbyType.Default);
 
     public Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
     public int RoomCacheCount { get { return cachedRoomList.Count; } }
     public Action<Dictionary<string, RoomInfo>> onRoomListUpdate;
 
+    private void Start()
+    {
+        Debug.Log($"[RoomListCache] Start");
+    }
+    public void JoinLobby()
+    {
+        PhotonNetwork.JoinLobby(customLobby);
+    }
 
     private void UpdateCachedRoomList(List<RoomInfo> roomList)
     {
@@ -32,6 +57,7 @@ public class RoomListCache : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        Debug.Log($"[RoomListCache] Joined lobby => {PhotonNetwork.CurrentLobby.Name}");
         cachedRoomList.Clear();
     }
 

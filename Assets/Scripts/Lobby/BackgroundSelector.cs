@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 public class BackgroundSelector : MonoBehaviour
 {
+    [SerializeField] private Sprite fixedBackground;
     [SerializeField] private List<Sprite> backgrounds = new List<Sprite>();
     [SerializeField] private Image backgroundImage;
 
     private int currentBackgroundIndex;
 
     [Header("Settings")]
-    [SerializeField] private bool ChangeBackgroundOnMenuSwitch = true;
+    [SerializeField] private bool ChangeBackgroundOnMenuSwitch = false;
     [SerializeField] private bool ChangeBackgroundOnStart = true;
 
 
@@ -25,6 +26,17 @@ public class BackgroundSelector : MonoBehaviour
         if (ChangeBackgroundOnStart)
         {
             SetBackground(PickBackground());
+        }
+        else
+        {
+            if (fixedBackground != null)
+            {
+                SetBackground(fixedBackground);
+            }
+            else
+            {
+                SetBackground(PickBackground());
+            }
         }
     }
 

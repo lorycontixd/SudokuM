@@ -1,6 +1,8 @@
 using ExitGames.Client.Photon;
+using Managers;
 using Michsky.MUIP;
 using Photon.Pun;
+using Photon.Pun.Demo.Cockpit;
 using Photon.Realtime;
 using System;
 using System.Collections;
@@ -21,22 +23,26 @@ public class MatchmakingMenu : BaseMenu
     }
     #endregion
 
+
     [Header("UI")]
+    public UserFrame userFrame;
+    [SerializeField] private Button leaderboardButton;
+    [SerializeField] private Button tempButton;
+    [SerializeField] private Transform panelsParent;
+    [SerializeField] private LeaderboardPanel leaderboardPanel;
+    [SerializeField] private Transform createRoomPanelParent;
     [SerializeField] private CreateRoomPanel createRoomPanel;
-    [SerializeField] private TextMeshProUGUI connectingText;
-    [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] private GameObject roomItemPrefab;
     [SerializeField] private Transform roomItemHolder;
     [SerializeField] private TMP_InputField codeInput;
-    [SerializeField] private List<GameObject> deactivatableUI = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI regionText;
 
     [Header("Settings")]
     [SerializeField] private float connectionTimeout = 30;
     [SerializeField] private RoomSearchMode searchMode;
 
+    public override MenuType Type => MenuType.MATCHMAKING;
 
-    private RoomListCache roomListCache;
     private List<MatchmakingListItem> roomListItems = new List<MatchmakingListItem>();
     private float connectionTimeoutTimestamp = 0;
     private bool IsConnecting = false;
@@ -45,10 +51,27 @@ public class MatchmakingMenu : BaseMenu
 
     private void Start()
     {
-        roomListCache = GetComponent<RoomListCache>();
-        roomListCache.onRoomListUpdate += UpdateRooms;
+        RoomListCache.Instance.onRoomListUpdate += UpdateRooms;
+
+        DatabaseManager.Instance.onQuery.AddListener(OnDbQuery);
     }
 
+    private void OnDbQuery(DatabaseQueryResultType resType, QueryData data)
+    {
+        if (data.QueryType == QueryType.GETUSER)
+        {
+            if (resType == DatabaseQueryResultType.SUCCESS)
+            {
+                if (data.extraInfo == "enter_room")
+                {
+                    GetUserQuery udata = (GetUserQuery)data;
+                    User other = udata.user;
+                    SessionManager.Instance.SetOtherUser(other);
+                }
+            }
+            controller.SwitchMenu(MenuType.LOBBY);
+        }
+    }
 
     private void Update()
     {
@@ -68,34 +91,35 @@ public class MatchmakingMenu : BaseMenu
 
     public override void Open()
     {
-        if (!PhotonNetwork.IsConnected)
+        if (createRoomPanelParent != null)
         {
-            SetConnectionTexts(false);
-            IsConnecting = true;
-            ConnectToEU();
+            createRoomPanelParent.gameObject.SetActive(false);
         }
-        else
+        if (panelsParent != null)
         {
-            SetConnectionTexts(true);
-            SetUsernameText(PhotonNetwork.LocalPlayer.NickName);
+            panelsParent.gameObject.SetActive(false);
         }
         createRoomPanel.Close();
+        leaderboardPanel.Close();
+        if (SessionManager.Instance.ActiveUser != null)
+        {
+            userFrame.UpdateUI();
+        }
+        UpdateRooms(RoomListCache.Instance.cachedRoomList);
     }
 
     #region Pun Callbacks
-
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
     }
     public override void OnJoinedLobby()
     {
+        Debug.Log($"Joined lobby ===> {PhotonNetwork.CurrentLobby.Name}, {PhotonNetwork.CurrentLobby.Type}");
         IsConnecting = false;
         connectionTimeoutTimestamp = 0;
-        SetConnectionTexts(true);
-        SetUsernameText(PhotonNetwork.LocalPlayer.NickName);
+        //SetConnectionTexts(true);
         regionText.text = $"Region: {PhotonNetwork.CloudRegion}";
-        AchievementsManager.Instance.GiveFirstTimeAchievement();
+        //AchievementsManager.Instance.GiveFirstTimeAchievement();
     }
     public override void OnCreatedRoom()
     {
@@ -109,7 +133,16 @@ public class MatchmakingMenu : BaseMenu
     }
     public override void OnJoinedRoom()
     {
-        controller.SwitchMenu(MenuType.LOBBY);
+        if (PhotonNetwork.CurrentRoom.PlayerCount > 1 && !PhotonNetwork.IsMasterClient)
+        {
+            int otherId = (int)PhotonNetwork.PlayerListOthers.First().CustomProperties["uid"];
+            DatabaseManager.Instance.GetUserFull(otherId);
+        }
+    }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        SessionManager.Instance.SetHostUser(null);
+        controller.SwitchMenu(MenuType.MAIN);
     }
     #endregion
 
@@ -123,6 +156,14 @@ public class MatchmakingMenu : BaseMenu
     {
         createRoomPanel.Open(this);
     }
+
+    public void ButtonDisconnect()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
     public void ButtonCodeSubmit()
     {
         if (searchMode == RoomSearchMode.CODE)
@@ -130,7 +171,7 @@ public class MatchmakingMenu : BaseMenu
             string code = codeInput.text;
             if (code != string.Empty)
             {
-                List<RoomInfo> roomInfos = roomListCache.cachedRoomList.Values.ToList();
+                List<RoomInfo> roomInfos = RoomListCache.Instance.cachedRoomList.Values.ToList();
                 RoomInfo roomWithCode = roomInfos.FirstOrDefault(r => r.CustomProperties["code"].ToString().ToLower() == code.ToLower());
                 if (roomWithCode != null)
                 {
@@ -153,21 +194,17 @@ public class MatchmakingMenu : BaseMenu
                 PhotonNetwork.JoinRoom(name);
             }
         }
-        
+    }
+
+    public void ButtonLeaderboard()
+    {
+        panelsParent.gameObject.SetActive(true);
+        leaderboardPanel.Open();
+    }
+    public void ButtonTemp()
+    {
     }
     #endregion
-
-
-
-
-    void ConnectToEU()
-    {
-        AppSettings euSettings = new AppSettings();
-        euSettings.UseNameServer = true;
-        euSettings.FixedRegion = "eu";
-        euSettings.AppIdRealtime = "8420cc2c-c728-4c55-aae1-7ef584128ec3"; // TODO: replace with your own PUN AppId unlocked for China region
-        PhotonNetwork.ConnectUsingSettings(euSettings);
-    }
 
     
 
@@ -210,30 +247,10 @@ public class MatchmakingMenu : BaseMenu
     }
     private void ShowAllRoomCodes()
     {
-        for (int i=0; i<roomListCache.RoomCacheCount; i++)
+        for (int i=0; i<RoomListCache.Instance.RoomCacheCount; i++)
         {
-            RoomInfo info = roomListCache.cachedRoomList.Values.ToList()[i];
+            RoomInfo info = RoomListCache.Instance.cachedRoomList.Values.ToList()[i];
             Debug.Log($"Room ==> Name: {info.Name}, code: {info.CustomProperties["code"]}");
-        }
-    }
-
-    private void SetConnectionTexts(bool isConnected)
-    {
-        connectingText.gameObject.SetActive(!isConnected);
-        foreach(var obj in deactivatableUI)
-        {
-            if (obj != null)
-            {
-                obj.SetActive(isConnected);
-            }
-        }
-    }
-
-    private void SetUsernameText(string username)
-    {
-        if (usernameText != null)
-        {
-            usernameText.text = $"Playing as: {username}";
         }
     }
 

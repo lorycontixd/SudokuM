@@ -23,7 +23,6 @@ public class MatchmakingManager : MonoBehaviour
 
     public static Dictionary<GameMode, int> GameModePlayers = new Dictionary<GameMode, int>()
     {
-        {GameMode.SINGLEPLAYER, 1},
         {GameMode.COOP, 2 },
         {GameMode.TIMERACE, 2 }
     };

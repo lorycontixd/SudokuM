@@ -1,7 +1,9 @@
 using GooglePlayGames;
+using Managers;
 using Michsky.MUIP;
 using NUnit.Framework.Constraints;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class SudokuCanvas : MonoBehaviour
 {
@@ -45,8 +49,14 @@ public class SudokuCanvas : MonoBehaviour
 
 
     [Header("UI")]
+    [SerializeField] private ButtonManager statsPanelButton;
+    [SerializeField] private ButtonManager historyPanelButton;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private Button emojiPanelButton;
+    [SerializeField] private PausePanel pausePanel;
     [SerializeField] private StatsPanel statsPanel;
     [SerializeField] private HistoryPanel historyPanel;
+    [SerializeField] private EmojiPanel emojiPanel;
     [SerializeField] private TextMeshProUGUI errorsText;
     [SerializeField] private TextMeshProUGUI ratingText;
     [SerializeField] private TextMeshProUGUI timeText;
@@ -63,7 +73,7 @@ public class SudokuCanvas : MonoBehaviour
     [SerializeField] private ButtonManager finalRetryGameButton;
     [SerializeField] private ButtonManager finalLeaveButton;
 
-
+    public float GameTime { get; private set; }
 
     private int[,] currentPuzzle;
     private SudokuSolver currentSolver = null;
@@ -80,7 +90,7 @@ public class SudokuCanvas : MonoBehaviour
 
     private void Start()
     {
-        LeaderboardManager.Instance.onGetPlayerScore += OnGetPlayerScore;
+        //LeaderboardManager.Instance.onGetPlayerScore += OnGetPlayerScore;
 
         Debug.Log($"[SudokuCanvas] First log");
         if (!PhotonNetwork.IsMasterClient)
@@ -119,25 +129,112 @@ public class SudokuCanvas : MonoBehaviour
             finalScoreGainedText.gameObject.SetActive(false);
             finalScoreNewText.gameObject.SetActive(false);
         }
-        if (historyPanel!= null)
+
+
+        // Deactivate history panel in timerace mode
+        if (GameManager.Instance.GameMode == GameMode.COOP)
         {
-            historyPanel.gameObject.SetActive(true);
-            historyPanel.Close();
+            historyPanelButton.gameObject.SetActive(true);
+            if (historyPanel != null)
+            {
+                historyPanel.gameObject.SetActive(true);
+                historyPanel.Close();
+            }
         }
+        else
+        {
+            historyPanelButton.gameObject.SetActive(false);
+            if (historyPanel != null)
+            {
+                historyPanel.gameObject.SetActive(false);
+                historyPanel.Close();
+            }
+        }
+        // Activate but close stats panel
         if (statsPanel != null)
         {
             statsPanel.gameObject.SetActive(true);
             statsPanel.Close();
         }
+
+        // Activate but close pause panel
+        if (pausePanel != null)
+        {
+            pausePanel.Close();
+        }
+
+        // Activate but close emojis panel
+        if (emojiPanel != null)
+        {
+            emojiPanel.Close();
+            emojiPanel.gameObject.SetActive(false);
+        }
+
+        PauseManager.Instance.onGamePause += OnGamePause;
+        PauseManager.Instance.onGameUnpause += OnGameUnpause;
+        DatabaseManager.Instance.onQuery.AddListener(OnDbQuery);
+        /*NetworkManager.Instance.onOtherPlayerGameDisconnected += OnOtherPlayerDisconnect;
+        NetworkManager.Instance.onGameDisconnected += OnGameDisconnect;
+        NetworkManager.Instance.onResumeGameAfterReconnect += OnGameResumeAfterDc;*/
+
         ResetBoard();
     }
 
-    
+    private void OnOtherPlayerDisconnect(Player player)
+    {
+        Pause();
+    }
+
+    private void OnGameResumeAfterDc()
+    {
+        Unpause();
+    }
+
+    private void OnGameDisconnect()
+    {
+        Pause();
+    }
+
+
+
+    private void OnDbQuery(DatabaseQueryResultType resultType, QueryData data)
+    {
+        if (data.QueryType == QueryType.ADDTIMERACESCORE)
+        {
+            if (resultType == DatabaseQueryResultType.SUCCESS)
+            {
+                Debug.Log($"[SC] OnDbQuery -> AddTimeraceScore successful");
+                AddTimeraceScoreQuery q = (AddTimeraceScoreQuery)data;
+                bool isWin = (int)q.result.winner["id"] == SessionManager.Instance.ActiveUser.ID;
+                int scoreChange = -1;
+                if (isWin)
+                {
+                    scoreChange = (int)q.result.winner["scoreChange"];
+                }
+                else
+                {
+                    scoreChange = (int)q.result.loser["scoreChange"];
+                }
+                UpdateFinalScoreText(isWin, SessionManager.Instance.ActiveUser.Scores.ScoreTimerace, scoreChange);
+            }
+        }
+    }
+
+    private void OnGameUnpause(int arg1, bool arg2, PauseManager.UnpauseReason reason)
+    {
+        Unpause();
+    }
+
+    private void OnGamePause(int arg1, bool arg2)
+    {
+        Pause();
+    }
 
     private void Update()
     {
-        if (IsPlaying)
+        if (IsPlaying && !PauseManager.Instance.IsPaused)
         {
+            GameTime += Time.deltaTime;
             UpdateTimeText();
         }
     }
@@ -171,6 +268,11 @@ public class SudokuCanvas : MonoBehaviour
         IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
+        // Reactivate value buttons
+        foreach (SudokuNumberButton val in valueButtons)
+        {
+            val.Activate();
+        }
     }
     public void InitializeBoard(int[,] puzzle, int[,] solution, int rating)
     {
@@ -200,6 +302,12 @@ public class SudokuCanvas : MonoBehaviour
         IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
+        // Reactivate value buttons
+        foreach (SudokuNumberButton val in valueButtons)
+        {
+            val.Activate();
+        }
+        // Fill board if in debug mode
         if (PhotonNetwork.IsMasterClient && DebugManager.Instance.DebugGame && DebugManager.Instance.CanvasFillForMasterClient)
         {
             StartCoroutine(AutoFillGradualCo(DebugManager.Instance.CanvasFillAmount));
@@ -231,6 +339,7 @@ public class SudokuCanvas : MonoBehaviour
         currentSolvedBoard = new int[,] { };
         
         currentErrors = 0;
+        GameTime = 0f;
         IsEmpty = true;
         IsPlaying = false;
         halfBoardSent = false;
@@ -273,10 +382,10 @@ public class SudokuCanvas : MonoBehaviour
             GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, cell.Row, cell.Col, val, true, false, MyCompletedCells, Photon.Realtime.ReceiverGroup.All);
         }
     }
-    private IEnumerator AutoFillGradualCo(int except = 1, float delay = 2f)
+    private IEnumerator AutoFillGradualCo(int n = 1, float delay = 2f)
     {
         yield return new WaitForSeconds(delay);
-        AutoFillGradual(except);
+        AutoFillGradual(n, DebugManager.Instance.CanvasFillType);
     }
 
     #region Buttons
@@ -296,6 +405,17 @@ public class SudokuCanvas : MonoBehaviour
         if (!historyPanel.IsPanelOpen)
         {
             statsPanel.ToggleOpen();
+        }
+    }
+    public void ButtonEmojis()
+    {
+        if (emojiPanel.gameObject.activeSelf)
+        {
+            emojiPanel.Close();
+        }
+        else
+        {
+            emojiPanel.Open();
         }
     }
     public void ButtonFinalNewGame()
@@ -409,6 +529,7 @@ public class SudokuCanvas : MonoBehaviour
                 bool isComplete = IsPuzzleComplete();
                 if (IsPuzzleCompleteAndCorrect())
                 {
+                    Debug.Log($"FINISHED!");
                     FinishAndClose(true);
                 }
             }else if (GameManager.Instance.GameMode == GameMode.TIMERACE)
@@ -416,8 +537,9 @@ public class SudokuCanvas : MonoBehaviour
                 if (userid == PhotonNetwork.LocalPlayer.ActorNumber)
                 {
                     bool isComplete = IsPuzzleComplete();
-                    if (IsPuzzleCompleteAndCorrect())   
+                    if (IsPuzzleCompleteAndCorrect())
                     {
+                        Debug.Log($"FINISHED! SENDING FINISH");
                         GamePunEventSender.SendFinish(userid, userid);
                     }
                 }
@@ -491,7 +613,6 @@ public class SudokuCanvas : MonoBehaviour
             {
                 StatsManagerCoop.Instance.AddMove(move);
                 int filledCells = cells.Where(c => c.Value != 0).ToList().Count;
-                Debug.Log($"[SendMoveStat] PLAYER {userid} filled cells: {filledCells}/{StatsManagerCoop.TOTAL_CELLS}");
                 StatsManagerCoop.Instance.SetFilledTiles(userid, completedCells);
             }
         }
@@ -559,7 +680,6 @@ public class SudokuCanvas : MonoBehaviour
                     //Debug.Log($"Sending move on mode TimeRace!");
                     GamePunEventSender.SendMove(PhotonNetwork.LocalPlayer.ActorNumber, PhotonNetwork.NickName, currentSelectedCell.Row, currentSelectedCell.Col, number.Value, isCorrect, false, MyCompletedCells+1, Photon.Realtime.ReceiverGroup.All);
                     int requiredHalf = (int)SudokuBoard.BOARD_CELLS_NUMBER / 2;
-                    Debug.Log($"- Checking for half board: {MyCompletedCells}, {requiredHalf}, {!halfBoardSent} ==> {MyCompletedCells == requiredHalf && !halfBoardSent}");
                     if (MyCompletedCells == requiredHalf && !halfBoardSent)
                     {
                         Debug.Log($"I reached half of the board! Sending notif");
@@ -577,113 +697,67 @@ public class SudokuCanvas : MonoBehaviour
         }
     }
 
+    private void UpdateFinalScoreText(bool isWin, int oldscore, int gscore)
+    {
+        int newscore = oldscore + gscore;
+
+        finalPanel.SetActive(true);
+        if (finalText != null)
+        {
+            finalText.gameObject.SetActive(true);
+            finalText.text = isWin ? "Victory!" : "Defeat";
+        }
+        if (GameManager.Instance.IsRankedGame)
+        {
+            finalScoreNewText.gameObject.SetActive(true);
+            finalScoreGainedText.gameObject.SetActive(true);
+            finalScoreGainedText.text = $"{gscore} points";
+            finalScoreNewText.text = $"New Score: {newscore}";
+        }
+        else
+        {
+            finalScoreNewText.gameObject.SetActive(true);
+            finalScoreNewText.text = "Unranked game gives no score";
+        }
+
+        finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+        finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+        finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
+    }
+
     public void Finish(bool isWin)
     {
         IsPlaying = false;
         WonGame = isWin;
-        int pscore = int.MinValue;
-        int mscore = int.MinValue;
-        int gscore = int.MinValue;
-        int newscore = int.MinValue;
-        bool isvalid = false;
 
-        // Time race score
-        if (PlayGamesPlatform.Instance.IsAuthenticated())
+
+        if (GameManager.Instance.IsRankedGame && PhotonNetwork.CurrentRoom.PlayerCount > 1 && SessionManager.Instance.OtherUser != null)
         {
-            if (GameManager.Instance != null)
-            {
-                if (GameManager.Instance.GameMode == GameMode.TIMERACE)
-                {
-                    Debug.Log($"[Sudoku] calling scores gplay");
-                    LeaderboardManager.Instance.GetScores();
-                }
-                else
-                {
-                    Debug.LogWarning($"[Sudoku] gamemode not timerace");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"[Sudoku] gamemanager is null");
-            }
+            DatabaseManager.Instance.RegisterTimerace(
+                SessionManager.Instance.GameInstance,
+                (isWin) ? SessionManager.Instance.ActiveUser.ID : SessionManager.Instance.OtherUser.ID,
+                (int)GameTime,
+                PhotonNetwork.IsMasterClient
+            );
         }
         else
         {
-            Debug.LogWarning($"[Sudoku] playgamesplatform is not authenticated => set base ui");
-            if (finalPanel != null)
-            {
-                finalPanel.SetActive(true);
-                if (finalText != null)
-                {
-                    finalText.gameObject.SetActive(true);
-                    finalText.text = WonGame ? "YOU WIN!" : "You lose :(";
-                }
-                if (GameManager.Instance.GameMode == GameMode.TIMERACE)
-                {
-                    finalScoreNewText.gameObject.SetActive(true);
-                    finalScoreNewText.text = $"No points were given for an unranked match";
-                }
-                finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-                finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-                finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
-            }
-        }
-    }
-
-    private void OnGetPlayerScore(bool success, int pscore, int maxscore)
-    {
-        // First give poitns if google works
-        int gscore = (WonGame) ? ScoreManager.CalculateTimeraceWin(pscore, maxscore) : ScoreManager.CalculateTimeraceLoss(pscore, maxscore);
-        int newscore = pscore + gscore;
-        if (success)
-        {
-            Debug.Log($"ongetplayer => registering pscore: {pscore}, maxscore: {maxscore}, newscor: {newscore}");
-            LeaderboardManager.Instance.RegisterTimeraceScore(newscore);
-        }
-
-        // Then update ui
-        if (finalPanel != null)
-        {
             finalPanel.SetActive(true);
-            if (finalText != null)
-            {
-                finalText.gameObject.SetActive(true);
-                finalText.text = WonGame ? "YOU WIN!" : "You lose :(";
-            }
-            if (GameManager.Instance.GameMode == GameMode.TIMERACE)
-            {
-                finalScoreNewText.gameObject.SetActive(true);
-
-                if (success)
-                {
-                    finalScoreGainedText.gameObject.SetActive(true);
-                    finalScoreGainedText.text = $"{gscore} points";
-                    finalScoreNewText.text = $"New Score: {newscore}";
-                    LeaderboardManager.Instance.RegisterTimeraceScore(newscore);
-                }
-                else
-                {
-                    finalScoreNewText.text = $"Could not assign score for timerace because connection to google services is not valid";
-                }
-            }
+            finalText.gameObject.SetActive(true);
+            finalText.text = isWin ? "Victory!" : "Defeat";
+            finalScoreNewText.gameObject.SetActive(true);
+            finalScoreNewText.text = "Unranked game gives no score";
             finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         }
+
     }
 
-    public void FinishAndClose(bool isWin, float delay = 5f)
+    public void FinishAndClose(bool isWin)
     {
-        StartCoroutine(FinishCo(isWin, delay));
-    }
-    private IEnumerator FinishCo(bool isWin, float delay)
-    {
+        Debug.Log($"[SC->Finish&Close] iswin: {isWin}");
         Finish(isWin);
-        yield return new WaitForSeconds(delay);
-        if (finalText != null)
-        {
-            finalText.gameObject.SetActive(false);
-        }
     }
 
     public bool IsPuzzleComplete()
@@ -788,10 +862,24 @@ public class SudokuCanvas : MonoBehaviour
     {
         if (timeText != null && puzzleStartTime != DateTime.MinValue)
         {
-            TimeSpan duration = DateTime.Now - puzzleStartTime;
+            TimeSpan duration = TimeSpan.FromSeconds(GameTime);
             string durationFormat = duration.ToString("hh\\:mm\\:ss");
             timeText.text = $"Time: {durationFormat}";
         }
+    }
+
+    public void Pause()
+    {
+        pauseButton.interactable = false;
+        pausePanel.gameObject.SetActive(true);
+        pausePanel.Open();
+        pausePanel.UpdateUI();
+    }
+    public void Unpause()
+    {
+        pauseButton.interactable = true;
+        pausePanel.Close();
+        pausePanel.gameObject.SetActive(false);
     }
 
     #region Enemy Half board

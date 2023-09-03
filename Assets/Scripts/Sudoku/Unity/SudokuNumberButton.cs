@@ -41,11 +41,13 @@ public class SudokuNumberButton : MonoBehaviour
     {
         valueText.gameObject.SetActive(false);
         selectionMask.gameObject.SetActive(false);
+        button.interactable = false;
     }
     public void Activate()
     {
         valueText.gameObject.SetActive(true);
-        selectionMask.gameObject.SetActive(true);
+        selectionMask.gameObject.SetActive(false);
+        button.interactable = true;
     }
 
     public void Reset()
