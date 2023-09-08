@@ -192,7 +192,7 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             }
         }else if (eventCode == GamePunEventSender.SendResumeGameAfterReconnectionEventCode)
         {
-            Debug.Log($"[PunRecv] Resume after dc");
+            Debug.Log($"[PunRecv] Resume after dc!!");
             NetworkManager.Instance.ResumeGameAfterDisconnect();
         }
     }
