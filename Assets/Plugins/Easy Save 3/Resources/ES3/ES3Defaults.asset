@@ -40,7 +40,6 @@ MonoBehaviour:
     - PhotonRealtime
     - PhotonUnityNetworking.Utilities.PhotonPlayer.Editor
     - PhotonUnityNetworking.Utilities
-    - Purchasing.Common
     - PunDemos.DemoHubEditor
     - PunDemos.DemoSlotcarEditor
     - PhotonUnityNetworking.Utilities.Culling.Editor

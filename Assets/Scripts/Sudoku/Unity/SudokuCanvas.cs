@@ -80,7 +80,7 @@ public class SudokuCanvas : MonoBehaviour
     private int[,] currentSolvedBoard;
     private int currentRating = -1;
     private bool IsEmpty = true;
-    private bool IsPlaying = false;
+    //private bool IsPlaying = false;
     private int currentErrors = 0;
     private DateTime puzzleStartTime = DateTime.MinValue;
     private GameObject currentPanel = null;
@@ -172,13 +172,15 @@ public class SudokuCanvas : MonoBehaviour
 
         PauseManager.Instance.onGamePause += OnGamePause;
         PauseManager.Instance.onGameUnpause += OnGameUnpause;
-        DatabaseManager.Instance.onQuery.AddListener(OnDbQuery);
+        GameManager.Instance.onGameFinish += OnGameFinish;
         /*NetworkManager.Instance.onOtherPlayerGameDisconnected += OnOtherPlayerDisconnect;
         NetworkManager.Instance.onGameDisconnected += OnGameDisconnect;
         NetworkManager.Instance.onResumeGameAfterReconnect += OnGameResumeAfterDc;*/
 
         ResetBoard();
     }
+
+    
 
     private void OnOtherPlayerDisconnect(Player player)
     {
@@ -195,31 +197,6 @@ public class SudokuCanvas : MonoBehaviour
         Pause();
     }
 
-
-
-    private void OnDbQuery(DatabaseQueryResultType resultType, QueryData data)
-    {
-        if (data.QueryType == QueryType.ADDTIMERACESCORE)
-        {
-            if (resultType == DatabaseQueryResultType.SUCCESS)
-            {
-                Debug.Log($"[SC] OnDbQuery -> AddTimeraceScore successful");
-                AddTimeraceScoreQuery q = (AddTimeraceScoreQuery)data;
-                bool isWin = (int)q.result.winner["id"] == SessionManager.Instance.ActiveUser.ID;
-                int scoreChange = -1;
-                if (isWin)
-                {
-                    scoreChange = (int)q.result.winner["scoreChange"];
-                }
-                else
-                {
-                    scoreChange = (int)q.result.loser["scoreChange"];
-                }
-                UpdateFinalScoreText(isWin, SessionManager.Instance.ActiveUser.Scores.ScoreTimerace, scoreChange);
-            }
-        }
-    }
-
     private void OnGameUnpause(int arg1, bool arg2, PauseManager.UnpauseReason reason)
     {
         Unpause();
@@ -232,7 +209,7 @@ public class SudokuCanvas : MonoBehaviour
 
     private void Update()
     {
-        if (IsPlaying && !PauseManager.Instance.IsPaused)
+        if (GameManager.Instance.IsPlaying && !PauseManager.Instance.IsPaused)
         {
             GameTime += Time.deltaTime;
             UpdateTimeText();
@@ -265,7 +242,6 @@ public class SudokuCanvas : MonoBehaviour
         UpdateErrorsText();
         puzzleStartTime = DateTime.Now;
         IsEmpty = false;
-        IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
         // Reactivate value buttons
@@ -299,7 +275,6 @@ public class SudokuCanvas : MonoBehaviour
         UpdateErrorsText();
         puzzleStartTime = DateTime.Now;
         IsEmpty = false;
-        IsPlaying = true;
         finalPanel.SetActive(false);
         boardLoadingText.gameObject.SetActive(false);
         // Reactivate value buttons
@@ -341,7 +316,6 @@ public class SudokuCanvas : MonoBehaviour
         currentErrors = 0;
         GameTime = 0f;
         IsEmpty = true;
-        IsPlaying = false;
         halfBoardSent = false;
 
         ResetValueButtons();
@@ -482,7 +456,8 @@ public class SudokuCanvas : MonoBehaviour
             bool isComplete = IsPuzzleComplete();
             if (IsPuzzleCompleteAndCorrect())
             {
-                FinishAndClose(true);
+                //FinishAndClose(true);+
+                GameManager.Instance.Finish(true);
             }
         }
         else
@@ -494,7 +469,8 @@ public class SudokuCanvas : MonoBehaviour
                 UpdateErrorsText();
                 if (currentErrors == MaxErrors)
                 {
-                    Finish(false);
+                    GameManager.Instance.Finish(false);
+                    //Finish(false);
                 }
             }
         }
@@ -522,18 +498,22 @@ public class SudokuCanvas : MonoBehaviour
         if (isCorrect)
         {
             // valid move
-            cell.SetNewValue(userid, digit, true);
-            CheckValueButtonsToDisable();
+            
             if (GameManager.Instance.GameMode == GameMode.COOP)
             {
+                cell.SetNewValue(userid, digit, true);
+                CheckValueButtonsToDisable();
                 bool isComplete = IsPuzzleComplete();
                 if (IsPuzzleCompleteAndCorrect())
                 {
                     Debug.Log($"FINISHED!");
-                    FinishAndClose(true);
+                    GameManager.Instance.Finish(true);
+                    //FinishAndClose(true);
                 }
             }else if (GameManager.Instance.GameMode == GameMode.TIMERACE)
             {
+                cell.SetNewValue(digit, true);
+                CheckValueButtonsToDisable();
                 if (userid == PhotonNetwork.LocalPlayer.ActorNumber)
                 {
                     bool isComplete = IsPuzzleComplete();
@@ -555,7 +535,7 @@ public class SudokuCanvas : MonoBehaviour
                 UpdateErrorsText();
                 if (currentErrors == MaxErrors)
                 {
-                    Finish(false);
+                    GameManager.Instance.Finish(false);
                     GamePunEventSender.SendFinish(
                         PhotonNetwork.LocalPlayer.ActorNumber,
                         PhotonNetwork.PlayerListOthers.First().ActorNumber
@@ -725,40 +705,29 @@ public class SudokuCanvas : MonoBehaviour
         finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
     }
 
-    public void Finish(bool isWin)
+    private void OnGameFinish(bool isPlayerWin, bool isValid, int oldScore, int scoreChange)
     {
-        IsPlaying = false;
-        WonGame = isWin;
-
-
-        if (GameManager.Instance.IsRankedGame && PhotonNetwork.CurrentRoom.PlayerCount > 1 && SessionManager.Instance.OtherUser != null)
-        {
-            DatabaseManager.Instance.RegisterTimerace(
-                SessionManager.Instance.GameInstance,
-                (isWin) ? SessionManager.Instance.ActiveUser.ID : SessionManager.Instance.OtherUser.ID,
-                (int)GameTime,
-                PhotonNetwork.IsMasterClient
-            );
-        }
-        else
+        pausePanel.Close();
+        statsPanel.Close();
+        historyPanel.Close();
+        emojiPanel.Close();
+        if (!isValid)
         {
             finalPanel.SetActive(true);
             finalText.gameObject.SetActive(true);
-            finalText.text = isWin ? "Victory!" : "Defeat";
+            finalText.text = isPlayerWin ? "Victory!" : "Defeat";
             finalScoreNewText.gameObject.SetActive(true);
             finalScoreNewText.text = "Unranked game gives no score";
             finalNewGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalRetryGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
             finalWaitingForHostText.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         }
-
+        else
+        {
+            UpdateFinalScoreText(isPlayerWin, oldScore, scoreChange);
+        }
     }
 
-    public void FinishAndClose(bool isWin)
-    {
-        Debug.Log($"[SC->Finish&Close] iswin: {isWin}");
-        Finish(isWin);
-    }
 
     public bool IsPuzzleComplete()
     {
@@ -866,6 +835,11 @@ public class SudokuCanvas : MonoBehaviour
             string durationFormat = duration.ToString("hh\\:mm\\:ss");
             timeText.text = $"Time: {durationFormat}";
         }
+    }
+
+    public void SetGametime(float time)
+    {
+        GameTime = time;
     }
 
     public void Pause()

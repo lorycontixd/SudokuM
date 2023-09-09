@@ -1,6 +1,7 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ public class GamePunEventSender
     public const byte SendReconnectionCheckEventCode = 12; // See function for documentation.
     public const byte SendReconnectionCheckReplyEventCode = 13;
     public const byte SendResumeGameAfterReconnectionEventCode = 14;
+    public const byte SendLeaveEventCode = 15;
+    public const byte SendLeaveRequestReceivedEventCode = 16;
 
 
     public static void SendBoard(int[,] board, int[,] solution, int rating)
@@ -143,10 +146,10 @@ public class GamePunEventSender
         PhotonNetwork.RaiseEvent(SendGameInstanceEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void SendReconnect(Player player)
+    public static void SendReconnect(Player player, float gameTime)
     {
-        object[] content = new object[] { player.ActorNumber };
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        object[] content = new object[] { player.ActorNumber, gameTime };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(SendReconnectedEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
@@ -174,10 +177,26 @@ public class GamePunEventSender
         PhotonNetwork.RaiseEvent(SendReconnectionCheckReplyEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void SendResumeGameAfterReconnection()
+    public static void SendResumeGameAfterReconnection(float gameTime)
     {
-        object[] content = new object[] { };
+        object[] content = new object[] { gameTime };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(SendResumeGameAfterReconnectionEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public static void SendLeave()
+    {
+        object[] content = new object[] { PhotonNetwork.LocalPlayer.ActorNumber };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        Debug.Log($"[GPE Sender] Sending leave to all");
+        PhotonNetwork.RaiseEvent(SendLeaveEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public static void SendLeaveRequestReceived(int myActorN, int targetActorN)
+    {
+        object[] content = new object[] { PhotonNetwork.LocalPlayer.ActorNumber, targetActorN };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        Debug.Log($"[GPE Sender] Sending leave request accept to {targetActorN}");
+        PhotonNetwork.RaiseEvent(SendLeaveRequestReceivedEventCode, content, raiseEventOptions, SendOptions.SendReliable);
     }
 }

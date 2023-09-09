@@ -135,7 +135,7 @@ public class CreateRoomPanel : MonoBehaviour
         opts.IsOpen = true;
         opts.IsVisible = true;
         opts.PlayerTtl = 20000;
-        opts.EmptyRoomTtl = NetworkManager.Instance.LightMaxReconnectSeconds * 1000;
+        //opts.EmptyRoomTtl = NetworkManager.Instance.LightMaxReconnectSeconds * 1000;
         string code = RoomCodeGenerator.GenerateCode();
         Hashtable ht = new Hashtable
         {

@@ -67,9 +67,9 @@ public class MatchmakingMenu : BaseMenu
                     GetUserQuery udata = (GetUserQuery)data;
                     User other = udata.user;
                     SessionManager.Instance.SetOtherUser(other);
+                    controller.SwitchMenu(MenuType.LOBBY);
                 }
             }
-            controller.SwitchMenu(MenuType.LOBBY);
         }
     }
 
@@ -136,12 +136,14 @@ public class MatchmakingMenu : BaseMenu
         if (PhotonNetwork.CurrentRoom.PlayerCount > 1 && !PhotonNetwork.IsMasterClient)
         {
             int otherId = (int)PhotonNetwork.PlayerListOthers.First().CustomProperties["uid"];
-            DatabaseManager.Instance.GetUserFull(otherId);
+            DatabaseManager.Instance.GetUserFull(otherId, "enter_room");
         }
     }
     public override void OnDisconnected(DisconnectCause cause)
     {
         SessionManager.Instance.SetHostUser(null);
+        SessionManager.Instance.SetOtherUser(null);
+        SessionManager.Instance.SetLoginData(null);
         controller.SwitchMenu(MenuType.MAIN);
     }
     #endregion

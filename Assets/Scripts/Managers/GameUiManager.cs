@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
@@ -36,11 +37,16 @@ public class GameUiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI roomText;
     [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private TextMeshProUGUI serverText;
-    [Header("Disconnect Panel")]
+    [SerializeField] private TextMeshProUGUI pingText;
+    [Header("Networking UI")]
     [SerializeField] private DisconnectPanel disconnectPanel;
+    [SerializeField] private Image lowWifiIcon;
+    [SerializeField] private AudioClip lowWifiSoundClip;
+    [SerializeField] private float lowWifiFadeDuration = 0.6f;
 
     private bool IsDebugPanelOpen = false;
     private bool IsDisconnectPanelOpen = false;
+    private int ping;
 
 
     private void Start()
@@ -50,12 +56,20 @@ public class GameUiManager : MonoBehaviour
         NetworkManager.Instance.onGameDisconnected += OnDisconnected;
         //NetworkManager.Instance.onGameReconnected += OnReconnected
         NetworkManager.Instance.onResumeGameAfterReconnect += OnResumeAfterDc;
+        GameManager.Instance.onGameFinish += OnGameFinish;
 
         gamePanel.SetActive(true);
         halfBoardPanel.SetActive(true);
         punDebugPanelButton.gameObject.SetActive(DebugManager.Instance.ShowDebugButton) ;
         punDebugPanel.SetActive(false);
-        disconnectPanel.gameObject.SetActive(false);
+        lowWifiIcon.gameObject.SetActive(false);
+        lowWifiIcon.transform.localScale = Vector3.zero;
+        disconnectPanel.Close();
+    }
+
+    private void OnGameFinish(bool arg1, bool arg2, int arg3, int arg4)
+    {
+        disconnectPanel.Close();
     }
 
     private void OnResumeAfterDc()
@@ -72,9 +86,38 @@ public class GameUiManager : MonoBehaviour
             roomText.text = $"Room: {roomval}";
             stateText.text = $"State: {PhotonNetwork.NetworkClientState}";
             serverText.text = $"Server: {PhotonNetwork.ServerAddress}";
+            pingText.text = $"Ping: {ping}";
+        }
+
+        ping = PhotonNetwork.GetPing();
+        if (ping >= NetworkManager.Instance.WarningPingValue && !lowWifiIcon.gameObject.activeSelf)
+        {
+            lowWifiIcon.gameObject.SetActive(true);
+            lowWifiIcon.transform.DOScale(Vector3.one, lowWifiFadeDuration);
+            //StartCoroutine(StartWifiLogoShakeCo(2f));
+            if (AudioManager.Instance != null)
+            {
+                //AudioManager.Instance.PlayNotification
+            }
+        }
+        if (ping < NetworkManager.Instance.WarningPingValue && lowWifiIcon.gameObject.activeSelf)
+        {
+            lowWifiIcon.gameObject.SetActive(false);
+            lowWifiIcon.transform.DOScale(Vector3.zero, lowWifiFadeDuration);
+        }
+        if (lowWifiIcon.gameObject.activeSelf)
+        {
         }
     }
 
+    /*private IEnumerator StartWifiLogoShakeCo(float duration = 2f)
+    {
+        while ( lowWifiIcon.gameObject.activeSelf )
+        {
+            lowWifiIcon.transform.DOSpiral(duration);
+            yield return new WaitForSeconds(duration);
+        }
+    }*/
 
     /// <summary>
     /// 

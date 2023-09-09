@@ -30,12 +30,11 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             int[,] board = MatrixUtilities.ComposeMatrix((int[])data[0], N);
             int[,] solution = MatrixUtilities.ComposeMatrix((int[])data[1], N);
             int rating = (int)data[3];
-            Debug.Log($"[EventReceiver] Received Board ==> N: {N}, Rating: {rating} ==> Initializing...");
             SudokuCanvas.Instance.InitializeBoard(board, solution, rating);
+            GameManager.Instance.IsPlaying = true;
         }
         else if (eventCode == GamePunEventSender.SendMoveEventCode)
         {
-
             object[] data = (object[])photonEvent.CustomData;
             int userid = (int)data[0];
             string username = (string)data[1];
@@ -45,12 +44,10 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             bool isCorrect = (bool)data[5];
             bool isDeleteMove = (bool)data[6];
             int completedCells = (int)data[7];
-            Debug.Log($"[EventReceiver] Recived move ==> {row}, {col}, {digit}, {isCorrect}, {isDeleteMove}, {completedCells}");
             SudokuCanvas.Instance.UpdateCellMultiplayer(userid, username, row, col, digit, isCorrect, isDeleteMove, completedCells);
         }
         else if (eventCode == GamePunEventSender.SendHalfBoardEventCode)
         {
-            Debug.Log($"RECEIVED HALF BOARD CODE");
             object[] data = (object[])photonEvent.CustomData;
             int userid = (int)data[0];
             if (AudioManager.Instance != null)
@@ -67,14 +64,16 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
             object[] data = (object[])photonEvent.CustomData;
             int userid = (int)data[0];
             int winnerid = (int)data[1];
-            SudokuCanvas.Instance.FinishAndClose(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
+            //SudokuCanvas.Instance.FinishAndClose(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
+            GameManager.Instance.Finish(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
         }
         else if (eventCode == GamePunEventSender.SendLossEventCode)
         {
             object[] data = (object[])photonEvent.CustomData;
             int userid = (int)data[0];
             int loserid = (int)data[1];
-            SudokuCanvas.Instance.FinishAndClose(loserid != PhotonNetwork.LocalPlayer.ActorNumber);
+            //SudokuCanvas.Instance.FinishAndClose(winnerid == PhotonNetwork.LocalPlayer.ActorNumber);
+            GameManager.Instance.Finish(loserid != PhotonNetwork.LocalPlayer.ActorNumber);
         }
         else if (eventCode == GamePunEventSender.SendPauseEventCode)
         {
@@ -143,12 +142,17 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
         {
             object[] data = (object[])photonEvent.CustomData;
             int actorNumber = (int)data[0];
+            float gameTime = (float)data[1];
             Player player = PhotonNetwork.PlayerListOthers.FirstOrDefault(p => p.ActorNumber == actorNumber);
-            NetworkManager.Instance.OnOtherPlayerReconnected(player);
+            //NetworkManager.Instance.OnOtherPlayerReconnected(player);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                GamePunEventSender.SendResumeGameAfterReconnection(gameTime);
+            }
         }
         else if (eventCode == GamePunEventSender.SendReconnectionCheckEventCode)
         {
-            object[] data = (object[])photonEvent.CustomData;
+            /*object[] data = (object[])photonEvent.CustomData;
             int sender = (int)data[0];
             int dcActorNumber = (int)data[1];
             Debug.Log($"[PunRecv] Receive reconn check from {sender} to {dcActorNumber}");
@@ -174,26 +178,49 @@ public class GamePunEventReceiver : MonoBehaviour, IOnEventCallback
                         GamePunEventSender.SendReconnectionCheckReply(sender, (int)NetworkManager.ReconnectionCheckStatus.SUCCESS);
                     }
                 }
-            }
+            }*/
         }else if (eventCode == GamePunEventSender.SendReconnectionCheckReplyEventCode)
         {
-            object[] data = (object[])photonEvent.CustomData;
+            /*object[] data = (object[])photonEvent.CustomData;
             int target = (int)data[0];
             int statusCode = (int)data[1];
-            Debug.Log($"[PunRecv] Receive reconn check reply from {target}");
             NetworkManager.ReconnectionCheckStatus code = (NetworkManager.ReconnectionCheckStatus)statusCode;
+            Debug.Log($"[PunRecv] Receive reconn check reply with target {target} => code: {code}");
             if (target == PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                Debug.Log($"[PunRecv] It's me => lets reconnect");
                 if (code == NetworkManager.ReconnectionCheckStatus.SUCCESS)
                 {
                     // Can restart
                     GamePunEventSender.SendResumeGameAfterReconnection();
                 }
-            }
+            }*/
         }else if (eventCode == GamePunEventSender.SendResumeGameAfterReconnectionEventCode)
         {
-            Debug.Log($"[PunRecv] Resume after dc!!");
-            NetworkManager.Instance.ResumeGameAfterDisconnect();
+            object[] data = (object[])photonEvent.CustomData;
+            float gametime = (float)data[0];
+            NetworkManager.Instance.ResumeGameAfterDisconnect(gametime);
+        }else if(eventCode == GamePunEventSender.SendLeaveEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int leaverActorN = (int)data[0];
+            Debug.Log($"[GPE Recv] Received leave request from {leaverActorN}");
+            NetworkManager.Instance.SetLeaver(leaverActorN);
+            if (leaverActorN != PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                GamePunEventSender.SendLeaveRequestReceived(PhotonNetwork.LocalPlayer.ActorNumber, leaverActorN);
+            }
+        }else if (eventCode == GamePunEventSender.SendLeaveRequestReceivedEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int senderActorN = (int)data[0];
+            int targetActorN = (int)data[1];
+            Debug.Log($"[GPE Recv] Received leave request accepted from {senderActorN} to {targetActorN} => myActorN: {PhotonNetwork.LocalPlayer.ActorNumber}");
+            if (targetActorN == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                Debug.Log($"[GPE Recv] is me => leave");
+                GameManager.Instance.LeaveGame();
+            }
         }
     }
 }

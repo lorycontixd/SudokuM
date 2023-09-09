@@ -21,6 +21,7 @@ namespace Managers
             }
             else
             {
+                //DontDestroyOnLoad(gameObject);
                 _instance = this;
             }
         }
@@ -107,7 +108,6 @@ namespace Managers
             notificationManager.gameObject.SetActive(true);
             notificationManager.title = notification.title;
             notificationManager.description = notification.description;
-            Debug.Log($"notification level: {notification.level},  {notificationManager.title}");
             if (notification.level == Level.INFO)
             {
                 notificationBackground.color = infoColor;

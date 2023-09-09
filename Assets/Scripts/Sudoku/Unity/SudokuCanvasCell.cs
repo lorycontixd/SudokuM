@@ -36,6 +36,11 @@ public class SudokuCanvasCell : MonoBehaviour
     public UnityEvent<SudokuCanvasCell> onCellClick;
     private float defaultFontSize;
 
+    public static Dictionary<string, Color> CellTextColor = new Dictionary<string, Color>()
+    {
+        { "default" , new Color(1,1,1,1) },
+        { "user" , new Color(0.31f, 0.31f, 0.86f, 1f) }
+    };
     public static Dictionary<CellState, Color> CellBackgroundColor = new Dictionary<CellState, Color>()
     {
         { CellState.DEFAULT, new Color(1f, 1f, 1f, 0f) },
@@ -80,8 +85,10 @@ public class SudokuCanvasCell : MonoBehaviour
     {
         Value = value;
         UpdateText();
-        cellText.color = (isCorrect) ? Color.black : Color.red;
-        cellText.faceColor = (isCorrect) ? Color.black : Color.red;
+        Color userColor = (IsLocked) ? CellTextColor["default"] : CellTextColor["user"];
+        Debug.Log($"User color: {userColor}");
+        cellText.color = (isCorrect) ? userColor : Color.red;
+        cellText.faceColor = (isCorrect) ? userColor : Color.red;
     }
     public void SetNewValue(int UserID, int value, bool isCorrect)
     {
@@ -89,7 +96,7 @@ public class SudokuCanvasCell : MonoBehaviour
         this.UserIdEdited = UserID;
         UpdateText();
         LocalPlayerEdited = PhotonNetwork.LocalPlayer.ActorNumber == UserID;
-        Color playerColour = LocalPlayerEdited ? GameManager.Instance.localPlayerCellColour : GameManager.Instance.otherPlayerCellColour;
+        Color playerColour = LocalPlayerEdited ? GameManager.Instance.localPlayerCellColourCoop : GameManager.Instance.otherPlayerCellColourCoop;
         cellText.color = (isCorrect) ? playerColour : Color.red;
         cellText.faceColor = (isCorrect) ? playerColour : Color.red;
         if (isCorrect) { SetLocked(true); }
@@ -126,7 +133,7 @@ public class SudokuCanvasCell : MonoBehaviour
         if (lastEdit)
         {
             Debug.Log($"Setlastedit => true");
-            borderImage.color = LocalPlayerEdited ? GameManager.Instance.localPlayerCellColour : GameManager.Instance.otherPlayerCellColour;
+            borderImage.color = LocalPlayerEdited ? GameManager.Instance.localPlayerCellColourCoop : GameManager.Instance.otherPlayerCellColourCoop;
             borderImage.gameObject.SetActive(true);
         }
         else

@@ -25,6 +25,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
+    #region SceneType
+    public enum SceneType
+    {
+        LOBBY,
+        GAME
+    }
+    #endregion
+
     #region ReconnectionSendMode
     public enum ReconnectionSendMode
     {
@@ -58,9 +66,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public int LightReconnectCooldownSeconds = 5;
 
     public bool IsConnectedToServer { get => PhotonNetwork.IsConnected; }
-    public bool IsConnectedToGame { get; private set; }
+    public bool IsConnectedToGame { get; set; }
     public Player DisconnectedPlayer { get; private set; } = null;
     public int PlayerRequestingCheck { get; set; } = -1;
+    public SceneType sceneType { get; private set; } = SceneType.LOBBY;
+    public bool ImLeaving { get; internal set; }
 
 
     //// == Private vars
@@ -71,6 +81,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private float _lightReconnectCooldownTimestamp;
     private int _lightReconnectAttempts = 0;
     private DisconnectCause _currentDisconnectCause;
+    private int leaverPlayerActorN = -1;
 
     // Other player disconnected
     private float _playerDisconnectTimestamp = 0f;
@@ -85,6 +96,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        _isReconnecting = false;
+        IsConnectedToGame = false;
+        leaverPlayerActorN = -1;
+
         PhotonNetwork.GameVersion = VersionManager.Instance.GetVersionString();
         PhotonNetwork.MaxResendsBeforeDisconnect = 3;
         ResetMyDisconnectVars();
@@ -118,7 +133,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
         }
 
+        // give player X seconds to reconnect, up to Y times.. If timeout or max times, i win
         if (DisconnectedPlayer != null)
+        {
+            _playerDisconnectTimestamp += Time.deltaTime;
+            if (_playerDisconnectTimestamp > LightMaxReconnectSeconds)
+            {
+                ConfirmOtherDisconnect();
+            }
+        }
+
+        // This code is replaced by receiving reconnection event
+        /*if (DisconnectedPlayer != null)
         {
             Debug.Log($"!!!! [NetMng] Disconnected player not null ===> IsInactive: {DisconnectedPlayer.IsInactive}, HasRejoined: {DisconnectedPlayer.HasRejoined},");
             
@@ -139,7 +165,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
                 ResetOtherDisconnectVars();
             }
-        }
+        }*/
+    }
+
+    public void SwitchScene(SceneType scene)
+    {
+        sceneType = scene;
     }
 
     private void ResetMyDisconnectVars()
@@ -154,6 +185,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         DisconnectedPlayer = null;
         _playerDisconnectTimestamp = 0f;
+    }
+
+    public void SetLeaver(int actorNumber)
+    {
+        this.leaverPlayerActorN = actorNumber;
     }
 
     public void ConnectToEU()
@@ -262,7 +298,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void ConfirmOtherDisconnect()
     {
-        // Send disconnection to server
+        // I win
+        GameManager.Instance.Finish(true);
     }
 
 
@@ -281,28 +318,52 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ResumeGameAfterDisconnect()
+    public void ResumeGameAfterDisconnect(float gameTime)
     {
         if (DisconnectedPlayer != null)
         {
             OnOtherPlayerReconnected(DisconnectedPlayer);
         }
+        SudokuCanvas.Instance.SetGametime(gameTime);
         onResumeGameAfterReconnect?.Invoke();
         PauseManager.Instance.UnpauseLocal();
     }
 
     #region Pun Callbacks
+
+
+    public override void OnConnectedToMaster()
+    {
+    }
+
     public override void OnDisconnected(DisconnectCause cause)
     {
-        // Not brute force ==> 
-        IsConnectedToGame = false;
-        if (!_isReconnecting)
+        if (!_isReconnecting && sceneType == SceneType.GAME)
         {
-            _isReconnecting = true;
-            _currentDisconnectCause = cause;
-            Managers.NotificationManager.Instance.Info("Connection lost", "Trying to reconnect");
-            onGameDisconnected?.Invoke();
-            PauseManager.Instance.PauseLocal();
+            Debug.Log($"[NetMng] Dced -> Imleaving: {ImLeaving}");
+            if (ImLeaving)
+            {
+                ImLeaving = false;
+                PhotonNetwork.LoadLevel("Lobby");
+            }
+            else
+            {
+                IsConnectedToGame = false;
+                _isReconnecting = true;
+                _currentDisconnectCause = cause;
+                Managers.NotificationManager.Instance.Info("Connection lost", "Trying to reconnect");
+                onGameDisconnected?.Invoke();
+                PauseManager.Instance.PauseLocal();
+            }
+            
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (newPlayer == DisconnectedPlayer && sceneType == SceneType.GAME)
+        {
+            Debug.Log("Player rejoined!!");
         }
     }
 
@@ -313,11 +374,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     /// </summary>
     public override void OnJoinedRoom()
     {
-        Debug.Log($"[NetMng] Joined room!!");
-        IsConnectedToGame = true;
-        //GamePunEventSender.SendReconnect(PhotonNetwork.LocalPlayer);
-        //onGameReconnected?.Invoke();
-        ResetMyDisconnectVars();
+        if (_isReconnecting && sceneType == SceneType.GAME)
+        {
+            Debug.Log($"[NetMng] Joined room!!");
+            IsConnectedToGame = true;
+            _isReconnecting = false;
+            GamePunEventSender.SendReconnect(PhotonNetwork.LocalPlayer, SudokuCanvas.Instance.GameTime);
+            ResetMyDisconnectVars();
+        }
     }
 
     /// <summary>
@@ -326,12 +390,29 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     /// <param name="otherPlayer"></param>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (!otherPlayer.Equals(PhotonNetwork.LocalPlayer))
+        if (!otherPlayer.Equals(PhotonNetwork.LocalPlayer) && sceneType == SceneType.GAME)
         {
-            Managers.NotificationManager.Instance.Info($"{otherPlayer.NickName} lost connection", "Player is trying to reconnect");
             DisconnectedPlayer = otherPlayer;
-            PauseManager.Instance.PauseLocal();
-            onOtherPlayerGameDisconnected?.Invoke(DisconnectedPlayer);
+            if (leaverPlayerActorN == otherPlayer.ActorNumber)
+            {
+                GameManager.Instance.Finish(true);
+            }
+            else
+            {
+                Managers.NotificationManager.Instance.Info($"{otherPlayer.NickName} lost connection", "Player is trying to reconnect");
+                PauseManager.Instance.PauseLocal();
+                onOtherPlayerGameDisconnected?.Invoke(DisconnectedPlayer);
+            }
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        if (NetworkManager.Instance.ImLeaving && sceneType == SceneType.GAME)
+        {
+            SessionManager.Instance.SetGameInstance(null);
+            SessionManager.Instance.SetOtherUser(null);
+            PhotonNetwork.LoadLevel("Lobby");
         }
     }
     #endregion
